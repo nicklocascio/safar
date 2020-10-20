@@ -19,9 +19,12 @@ from django.conf.urls import url
 
 from about import views
 from Trips import trips_views
+from Users import users_views
 
 urlpatterns = [
     path('about/', views.about, name='about'),
 	path('Trips/', trips_views.Trips, name='Trips'),
+	path('Users/', users_views.Users, name='Users'),
     path('admin/', admin.site.urls),
+	path('trips_create/', trips_views.trips_created, name='trips_created')
 ]

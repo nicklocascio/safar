@@ -25,27 +25,29 @@ class DayAction(models.Model):
 
 class trip_lib():
 
-	def add_trip(user_n, days=1):
-		temp_t = Trip(user=user_n, days=days)
-		temp_t.save()
-		
-		for _ in range(days):
-			add_day(temp_t)
-		
-		temp_t.save()
-		return temp_t
-
-	def add_day(trip_n):
-		temp_d = Day(trip=trip_n)
-		temp_d.save()
-		add_action(temp_d)
-		temp_d.save()
-		return temp_d
 
 	def add_action(day_n):
 		temp_a = DayAction(day=day_n)
 		temp_a.save()
 		return temp_a
+
+	def add_day(trip_n):
+		temp_d = Day(trip=trip_n)
+		temp_d.save()
+		trip_lib.add_action(temp_d)
+		temp_d.save()
+		return temp_d
+
+	def add_trip(user_n, days=1):
+		temp_t = Trip(user=user_n, days=days)
+		temp_t.save()
+		
+		for _ in range(days):
+			trip_lib.add_day(temp_t)
+		
+		temp_t.save()
+		return temp_t
+
 
 	def edit_trip(trip=None, start_location="", destination="", total_time=0, days=0, user=None):
 		if trip != None: 
@@ -90,72 +92,5 @@ class trip_lib():
 			action.save()
 
 		return
-
-
-
-
-
-
-
-'''
-	def create_trip(trip_user, start_location, destination, days, total_time):
-	
-		trip = Trip.objects.create(start_location=start_location, destination=destination, days=days, total_time=total_time, trip_user=trip_user)
-		trip.trip_user = trip_user
-		trip.save()
-
-		for _ in range(days):
-			Day.objects.create()
-
-		trip.save()
-
-		
-'''
-
-
-'''
-	def edit_trip(self, start_location=None, destination=None, days=None, total_time=None):
-		if start_location != None:
-			self.start_location = start_location
-		if destination != None:
-			self.destination = destination
-		if total_time != None:
-			self.total_time = total_time
-		if days != None:
-			self.days = days
-'''
-
-'''
-	def create_day(related_id, start_location="", destination="", total_day_time=0):
-		day1 = Day.objects.create(start_location=start_location, destination=destination, total_day_time=total_day_time, day_trip=related_id)
-		day1.save()
-'''
-'''
-
-	def get_itinerary():
-'''
-
-
-
-class Board(models.Model):
-    name = models.CharField(max_length=30, unique=True)
-    description = models.CharField(max_length=100)
-
-
-class Topic(models.Model):
-    subject = models.CharField(max_length=255)
-    last_updated = models.DateTimeField(auto_now_add=True)
-    board = models.ForeignKey(Board, related_name='topics', on_delete=models.CASCADE)
-    starter = models.ForeignKey(User, related_name='topics', on_delete=models.CASCADE)
-
-
-class Post(models.Model):
-    message = models.TextField(max_length=4000)
-    topic = models.ForeignKey(Topic, related_name='posts', on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(null=True)
-    created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)
-    updated_by = models.ForeignKey(User, null=True, related_name='+', on_delete=models.CASCADE)
-
 
 
