@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'about',
     'Users',
     'Trips',
+	'widget_tweaks',
 ]
 
 MIDDLEWARE = [
