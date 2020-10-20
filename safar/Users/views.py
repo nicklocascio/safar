@@ -9,16 +9,6 @@ def display_user(request):
     users = User.objects.all()
     return render(request, 'display_users.hmtl', {'users': users})
 
-'''def signup(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            auth_login(request, user)
-            return redirect('home')
-        else:
-            form = UserCreationForm()
-    return render(request, 'signup.html', {'form': form})'''
 
 def signup(request):
     if request.method == 'POST':
