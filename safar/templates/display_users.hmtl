@@ -8,7 +8,7 @@
         <h1>Users</h1>
             
         {% for user in users %}
-            {{user.name}} <br>
+            {{user.username}} <br>
         {% endfor %}
     </body>
 </html>
