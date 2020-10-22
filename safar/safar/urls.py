@@ -17,14 +17,17 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url
 
-from about import views
+from about import views as about_views
+from Users import views as user_views
 from Trips import trips_views
-from Users import users_views
 
 urlpatterns = [
-    path('about/', views.about, name='about'),
-	path('Trips/', trips_views.Trips, name='Trips'),
-	path('Users/', users_views.Users, name='Users'),
+    path('signup/', user_views.signup, name='signup'),
+    path('users/', user_views.display_user, name='display_users'),
+    path('about/', about_views.about, name='about'),
     path('admin/', admin.site.urls),
-	path('trips_create/', trips_views.trips_created, name='trips_created')
+	  path('', about_views.home, name='home'),
+	  path('home/', about_views.home, name='home')
+    path('Trips/', trips_views.Trips, name='Trips'),
+    path('trips_create/', trips_views.trips_created, name='trips_created')
 ]
