@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url
+from django.contrib.auth import views as auth_views
 
 from about import views as about_views
 from Users import views as user_views
@@ -23,6 +24,8 @@ from Trips import views as trips_views
 
 urlpatterns = [
     path('signup/', user_views.signup, name='signup'),
+	path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+	path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('users/', user_views.display_user, name='display_users'),
     path('about/', about_views.about, name='about'),
     path('admin/', admin.site.urls),

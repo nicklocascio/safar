@@ -5,4 +5,4 @@ def about(request):
     return HttpResponse('About Page')
 
 def home(request):
-    return HttpResponse('<h1><b>SAFAR Home Page</b></h1>')
+    return render(request, 'home.html')
