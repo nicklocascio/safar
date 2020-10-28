@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+        <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            #map {
+                position: absolute;
+                top: 0px;
+                bottom: 0;
+                width: 100%;
+            }
+
+            #instructions {
+                position: absolute;
+                margin: 20px;
+                width: 25%;
+                top: 0;
+                bottom: 20%;
+                padding: 20px;
+                background-color: rgba(255, 255, 255, 0.9);
+                overflow-y: scroll;
+                font-family: sans-serif;
+                font-size: 0.8em;
+                line-height: 2em;
+            }
+
+            .duration {
+                font-size: 2em;
+            }
+
+            .geocoder {
+                position: absolute;
+                z-index: 1;
+                width: 50%;
+                left: 50%;
+                margin-left: -10%;
+                top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+            type="text/css"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script> 
+        <div id='map'></div>
+        <div id="instructions"></div>
+        <div id="geocoder" class="geocoder"></div>
+
+        <script>
+            mapboxgl.accessToken = 'pk.eyJ1Ijoic2FmYXJ0ZWFtMjAyMCIsImEiOiJja2dtbHRsbW4wMWtlMnhxbDNheGJ6OWY5In0.sQWD2q6skgQK31V-ip2Ltg';
+            var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v11',
+                center: [-122.662323, 45.523751],
+                zoom: 9
+            });
+
+            // allow to location search
+            /*
+            map.addControl(
+                new MapboxGeocoder({
+                    accessToken: mapboxgl.accessToken,
+                    mapboxgl: mapboxgl
+                })
+            );
+
+            map.addControl(
+                new MapboxGeocoder({
+                    accessToken: mapboxgl.accessToken,
+                    mapboxgl: mapboxgl
+                })
+            );
+            */
+            var geocoder = new MapboxGeocoder ({
+                accessToken: mapboxgl.accessToken,
+                mapboxgl: mapboxgl
+            });
+            document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
+
+            var geocoder = new MapboxGeocoder ({
+                accessToken: mapboxgl.accessToken,
+                mapboxgl: mapboxgl
+            });
+            document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
+
+            // set bounds of map
+            //var bounds = [[-123.069003, 45.395273], [-122.303707, 45.612333]];
+            //map.setMaxBounds(bounds);
+
+            // initialize the map canvas to interact with later
+            var canvas = map.getCanvasContainer();
+
+            var start = [-122.662323, 45.523751];
+
+            /*
+            function geocode(address) {
+                address = address.replace(/[,.]/g, "");
+                address_parts = address.split(" ");
+                console.log(address_parts);
+
+                var url = "https://api.mapbox.com.geocoding/v5/mapbox.places/"
+                for(var i = 0; i < address_parts.length-1; i++) {
+                    url += (address_parts[i] + '%20');
+                }
+                url += (address_parts[address_parts.length-1] + '.json?access_token=' + mapboxgl.accessToken);
+
+                console.log(url);
+            }
+            */
+
+            // create a function to make a directions request
+            function getRoute(end) {
+                // make a directions request using cycling profile
+                // an arbitrary start will always be the same
+                // only the end or destination will change
+                var start = [-122.662323, 45.523751];
+                var url = 'https://api.mapbox.com/directions/v5/mapbox/cycling/' + start[0] + ',' + start[1] + ';'
+                    + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
+
+                // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+                var req = new XMLHttpRequest();
+                req.open('GET', url, true);
+                req.onload = function() {
+                    var json = JSON.parse(req.response);
+                    var data = json.routes[0];
+                    var route = data.geometry.coordinates;
+                    var geojson = {
+                        type: 'Feature',
+                        properties: {},
+                        geometry: {
+                            type: 'LineString',
+                            coordinates: route
+                        }
+                    };
+                    // if route already exists on the map, reset it using setData
+                    if(map.getSource('route')) {
+                        map.getSource('route').setData(geojson);
+                    } else { // otherwise make a new request
+                        map.addLayer({
+                            id: 'route',
+                            type: 'line',
+                            source: {
+                                type: 'geojson',
+                                data: {
+                                    type: 'Feature',
+                                    properties: {},
+                                    geometry: {
+                                        type: 'LineString',
+                                        coordinates: geojson
+                                    }
+                                }
+                            },
+                            layout: {
+                                'line-join': 'round',
+                                'line-cap': 'round'
+                            },
+                            paint: {
+                                'line-color': '#3887be',
+                                'line-width': 5,
+                                'line-opacity': 0.75
+                            }
+                        });
+                    }
+                    // display instructions
+                    var instructions = document.getElementById('instructions');
+                    var steps = data.legs[0].steps;
+
+                    var tripInstructions = [];
+                    for(var i = 0; i < steps.length; i++) {
+                        tripInstructions.push('<br><li>' + steps[i].maneuver.instruction) + '</li>';
+                        instructions.innerHTML = '<br><span class="duration">Trip duration: ' + Math.floor(data.duration / 60) + 'min </span>' + tripInstructions;
+                    }
+                };
+                req.send();
+            }
+
+            map.on('load', function() {
+                // make an initial directions request that 
+                // starts and ends @ same location
+                getRoute(start);
+
+                // Add starting point to the map
+                map.addLayer({
+                    id: 'point',
+                    type: 'circle',
+                    source: {
+                        type: 'geojson',
+                        data: {
+                            type: 'FeatureCollection',
+                            features: [{
+                                type: 'Feature',
+                                properties: {},
+                                geometry: {
+                                    type: 'Point',
+                                    coordinates: start
+                                }
+                            }
+                            ]
+                        }
+                    },
+                    paint: {
+                        'circle-radius': 10,
+                        'circle-color': '#3887be'
+                    }
+                });
+            });
+                
+            map.on('click', function(e) {
+                var coordsObj = e.lngLat;
+                canvas.style.cursor = '';
+                var coords = Object.keys(coordsObj).map(function(key) {
+                    return coordsObj[key];
+                });
+                var end = {
+                    type: 'FeatureCollection',
+                    features: [{
+                        type: 'Feature',
+                        properties: {},
+                        geometry: {
+                            type: 'Point',
+                            coordinates: coords
+                        }
+                    }
+                    ]
+                };
+                if(map.getLayer('end')) {
+                    map.getSource('end').setData(end);
+                } else {
+                    map.addLayer({
+                        id: 'end',
+                        type: 'circle',
+                        source: {
+                            type: 'geojson',
+                            data: {
+                                type: 'FeatureCollection',
+                                features: [{
+                                    type: 'Feature',
+                                    properties: {},
+                                    geometry: {
+                                        type: 'Point',
+                                        coordinates: coords
+                                    }
+                                }]
+                            }
+                        },
+                        paint: {
+                            'circle-radius': 10,
+                            'circle-color': '#f30'
+                        }
+                    });
+                }
+                getRoute(coords);
+            });
+        </script>
+    </body>
+</html>
