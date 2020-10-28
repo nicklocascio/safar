@@ -70,6 +70,7 @@
             });
 
             // allow to location search
+            
             /*
             map.addControl(
                 new MapboxGeocoder({
@@ -85,17 +86,29 @@
                 })
             );
             */
+            
             var geocoder = new MapboxGeocoder ({
                 accessToken: mapboxgl.accessToken,
                 mapboxgl: mapboxgl
+            }).on('result', function({result}) {
+                console.log(result)
+                var address = result.place_name;
+                console.log(address);
             });
             document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 
+            /*
+            geocoder.on('result', function(results) {
+                console.log(results);
+            })
+            */
+            /*
             var geocoder = new MapboxGeocoder ({
                 accessToken: mapboxgl.accessToken,
                 mapboxgl: mapboxgl
             });
             document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
+            */
 
             // set bounds of map
             //var bounds = [[-123.069003, 45.395273], [-122.303707, 45.612333]];
@@ -121,6 +134,22 @@
                 console.log(url);
             }
             */
+
+            function geocode_address() {
+                console.log('hello');
+                var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/8575%20E%20Chenango%20Ave%20Denver%20CO%2080237.json?access_token=pk.eyJ1Ijoic2FmYXJ0ZWFtMjAyMCIsImEiOiJja2dtbHRsbW4wMWtlMnhxbDNheGJ6OWY5In0.sQWD2q6skgQK31V-ip2Ltg&cachebuster=1603759393143&autocomplete=true'
+                console.log(url);
+                var req = new XMLHttpRequest();
+                req.open('GET', url, true);
+                req.onload = function() {
+                    var json = JSON.parse(req.response);
+                    console.log(json);
+                    var address = json.features[0];
+                    console.log(address.place_name);
+                    console.log(address.geometry.coordinates);
+                };
+                req.send();
+            }
 
             // create a function to make a directions request
             function getRoute(end) {
@@ -191,6 +220,7 @@
             map.on('load', function() {
                 // make an initial directions request that 
                 // starts and ends @ same location
+                geocode_address();
                 getRoute(start);
 
                 // Add starting point to the map
