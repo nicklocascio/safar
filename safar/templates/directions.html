@@ -92,8 +92,8 @@
                 mapboxgl: mapboxgl
             }).on('result', function({result}) {
                 console.log(result)
-                var address = result.place_name;
-                console.log(address);
+                var start_address = result.place_name;
+                console.log(start_address);
             });
             document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 
