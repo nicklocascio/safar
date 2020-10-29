@@ -29,8 +29,8 @@ urlpatterns = [
     path('users/', user_views.display_user, name='display_users'),
     path('about/', about_views.about, name='about'),
     path('admin/', admin.site.urls),
-	path('', about_views.home, name='home'),
-	path('home/', about_views.home, name='home'),
+	path('', about_views.home, name='index'),
+	path('home/', about_views.home, name='index'),
     path('trips/', trips_views.Trips, name='trips'),
     path('trips_create/', trips_views.trips_created, name='trips_created'),
 ]
