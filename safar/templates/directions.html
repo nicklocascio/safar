@@ -117,13 +117,16 @@
             
             var start;
             var end;
+		
+	    var start_location = "";
+	    var destination = "";
 
             var geocoder = new MapboxGeocoder ({
                 accessToken: mapboxgl.accessToken,
                 mapboxgl: mapboxgl
             }).on('result', function({result}) {
                 console.log(result)
-                var address = result.place_name;
+                var start_location = result.place_name;
                 start = result.geometry.coordinates;
                 console.log(address);
             });
@@ -135,6 +138,7 @@
             }).on('result', function({result}) {
                 console.log(result)
                 var address = result.place_name;
+		var destination = result.place_name;
                 end = result.geometry.coordinates;
                 console.log(address);
             });
