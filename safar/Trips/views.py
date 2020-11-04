@@ -18,12 +18,22 @@ def trips_created(request):
 
 	return HttpResponse(response_html)
 
-def new_trip(request, pk):
+def create_trip(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			data = json.loads(request.body.decode('utf-8'))
+			user = request.user
+			trip = trip_lib.add_trip(user)
+			trip_lib.edit_trip(trip=trip, start_location="")
+			d = {
+				'user':str(user),
+				'start_location':trip.start_location
+			}
 	
-	if request.method == 'POST':
-		form = NewTripForm(request.POST)
-		if form.is_valid():
-			trip_form = form.save(commit=False)
-
-			#post = Post.objects.create(
-				#message=form.cleaned_data.get('message'
+			return render(request, 'directions.html', d)  # edittrip.html
+	
+	else:
+		data = {}
+		if request.method == 'POST':	
+			data = json.loads(request.body.decode('utf-8'))
+		return render(request, 'direction.html', data)
