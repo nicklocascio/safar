@@ -31,9 +31,14 @@ def create_trip(request):
 			}
 	
 			return render(request, 'directions.html', d)  # edittrip.html
+		else:
+			return render(request, 'createtrip.html', {})
 	
 	else:
 		data = {}
 		if request.method == 'POST':	
 			data = json.loads(request.body.decode('utf-8'))
-		return render(request, 'direction.html', data)
+			return render(request, 'direction.html', data)
+		else:
+			return render(request, 'createtrip.html', {})
+		
