@@ -177,6 +177,23 @@
                 console.log(url);
             }
             */
+            var return_dict;
+
+			function create_trip(){
+				console.log(start_address);
+				var url = "create_trip/";
+				var req = new XMLHttpRequest();
+				req.open('POST', url, true);
+				req.onload = function(e){
+					return_dict = JSON.parse(req.body);
+                    console.log(return_dict);
+				}
+
+				var dict = {'start_location':start_address, 'destination':destination};
+				let json_dict = JSON.stringify(dict);
+				console.log(json_dict);
+				req.send(json_dict);
+			}
 
             function geocode_address() {
                 console.log('hello');
