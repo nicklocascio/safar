@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Trip, Day, DayAction, trip_lib
-import simplejson as json
+import json
 # from .forms import NewTripForm
 # Create your views here.
 
@@ -22,6 +22,7 @@ def trips_created(request):
 def create_trip(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
+			print('in post')
 			data = json.loads(request.body.decode('utf-8'))
 			user = request.user
 			trip = trip_lib.add_trip(user)

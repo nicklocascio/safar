@@ -36,7 +36,7 @@
 
             .map-overlay .button {
                 height: 50px;
-                right: 10px;
+                right: 100px;
                 width: 20%;
             }
 
@@ -96,39 +96,22 @@
                 center: [-122.662323, 45.523751],
                 zoom: 9
             });
-
-            // allow to location search
             
-            /*
-            map.addControl(
-                new MapboxGeocoder({
-                    accessToken: mapboxgl.accessToken,
-                    mapboxgl: mapboxgl
-                })
-            );
-
-            map.addControl(
-                new MapboxGeocoder({
-                    accessToken: mapboxgl.accessToken,
-                    mapboxgl: mapboxgl
-                })
-            );
-            */
+            // initialize the map canvas to interact with later
+            var canvas = map.getCanvasContainer();
             
             var start;
             var end;
-		
-	    var start_location = "";
-	    var destination = "";
+	        var start_location = "";
+	        var destination = "";
 
             var geocoder = new MapboxGeocoder ({
                 accessToken: mapboxgl.accessToken,
                 mapboxgl: mapboxgl
             }).on('result', function({result}) {
                 console.log(result)
-                var start_location = result.place_name;
+                start_location = result.place_name;
                 start = result.geometry.coordinates;
-                console.log(address);
             });
             document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 
@@ -137,68 +120,35 @@
                 mapboxgl: mapboxgl
             }).on('result', function({result}) {
                 console.log(result)
-                var address = result.place_name;
-				var destination = result.place_name;
+				destination = result.place_name;
                 end = result.geometry.coordinates;
-                console.log(address);
             });
             document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
-
-            /*
-            geocoder.on('result', function(results) {
-                console.log(results);
-            })
-            */
-            /*
-            var geocoder = new MapboxGeocoder ({
-                accessToken: mapboxgl.accessToken,
-                mapboxgl: mapboxgl
-            });
-            document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
-            */
 
             // set bounds of map
             //var bounds = [[-123.069003, 45.395273], [-122.303707, 45.612333]];
             //map.setMaxBounds(bounds);
 
-            // initialize the map canvas to interact with later
-            var canvas = map.getCanvasContainer();
-
-            //var start = [-122.662323, 45.523751];
-
-            /*
-            function geocode(address) {
-                address = address.replace(/[,.]/g, "");
-                address_parts = address.split(" ");
-                console.log(address_parts);
-
-                var url = "https://api.mapbox.com.geocoding/v5/mapbox.places/"
-                for(var i = 0; i < address_parts.length-1; i++) {
-                    url += (address_parts[i] + '%20');
-                }
-                url += (address_parts[address_parts.length-1] + '.json?access_token=' + mapboxgl.accessToken);
-
-                console.log(url);
-            }
-            */
             var return_dict;
-
 			function create_trip(){
-				console.log(start_address);
-				var url = "create_trip/";
+				//display();
+				var url = "";
 				var req = new XMLHttpRequest();
 				req.open('POST', url, true);
-				req.onload = function(e){
-					return_dict = JSON.parse(req.body);
-                    console.log(return_dict);
-				}
-
-				var dict = {'start_location':start_address, 'destination':destination};
-				let json_dict = JSON.stringify(dict);
+                var dict = {'start_location':start_location, 'destination':destination};
+				var json_dict = JSON.stringify(dict);
 				console.log(json_dict);
 				req.send(json_dict);
+                /*
+				req.onload = function(e){
+					//return_dict = JSON.parse(req.body);
+                    //console.log(return_dict)
+				    //window.location.href = "../directions/";
+				}
+                */
 			}
 
+            /*
             function geocode_address() {
                 console.log('hello');
                 var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/8575%20E%20Chenango%20Ave%20Denver%20CO%2080237.json?access_token=pk.eyJ1Ijoic2FmYXJ0ZWFtMjAyMCIsImEiOiJja2dtbHRsbW4wMWtlMnhxbDNheGJ6OWY5In0.sQWD2q6skgQK31V-ip2Ltg&cachebuster=1603759393143&autocomplete=true'
@@ -214,9 +164,13 @@
                 };
                 req.send();
             }
+            */
 
             // create a function to make a directions request
             function getRoute() {
+                create_trip();
+                console.log(start_location + " --> " + destination);
+                console.log(start + " --> " + end)
                 // make a directions request using cycling profile
                 // an arbitrary start will always be the same
                 // only the end or destination will change
@@ -284,11 +238,12 @@
                 req.send();
             }
 
+            /*
             map.on('load', function() {
                 // make an initial directions request that 
                 // starts and ends @ same location
-                geocode_address();
-                getRoute(start);
+                //geocode_address();
+                //getRoute(start);
 
                 // Add starting point to the map
                 map.addLayer({
@@ -362,6 +317,7 @@
                 }
                 getRoute(coords);
             });
+            */
         </script>
     </body>
 </html>
