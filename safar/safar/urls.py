@@ -36,4 +36,5 @@ urlpatterns = [
     path('trips_create/', trips_views.trips_created, name='trips_created'),
     path('map/', maps_views.default_map, name='default_map'),
     path('directions/', maps_views.directions, name='directions'),
+    path('createtrip/', trips_views.create_trip, name='create_trip'),
 ]
