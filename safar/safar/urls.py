@@ -37,4 +37,6 @@ urlpatterns = [
 
     path('trips/', trips_views.Trips, name='trips'),                           # trip urls
     path('trips_create/', trips_views.trips_created, name='trips_created'),
+
+	path('userAccount/', user_views.accountPage, name='user_account'),
 ]
