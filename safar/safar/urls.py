@@ -21,6 +21,7 @@ from django.contrib.auth import views as auth_views
 from about import views as about_views
 from Users import views as user_views
 from Trips import views as trips_views
+from maps import views as maps_views
 
 urlpatterns = [
     path('signup/', user_views.signup, name='signup'),
@@ -33,4 +34,7 @@ urlpatterns = [
 	path('home/', about_views.home, name='home'),
     path('trips/', trips_views.Trips, name='trips'),
     path('trips_create/', trips_views.trips_created, name='trips_created'),
+    path('map/', maps_views.default_map, name='default_map'),
+    path('directions/', maps_views.directions, name='directions'),
+    path('createtrip/', trips_views.create_trip, name='create_trip'),
 ]
