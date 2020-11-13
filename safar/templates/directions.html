@@ -35,8 +35,10 @@
             }
 
             .map-overlay .button {
+                position: absolute;
                 height: 50px;
-                right: 100px;
+                right: -700px;
+                top: 20px;
                 width: 20%;
             }
 
@@ -45,6 +47,7 @@
                 margin: 20px;
                 width: 25%;
                 top: 0;
+                right: 100px;
                 bottom: 20%;
                 padding: 20px;
                 background-color: rgba(255, 255, 255, 0.9);
@@ -78,7 +81,7 @@
         <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script> 
         <div id='map'></div>
-        <div class="map-overlay top">
+        <div class="map-overlay">
             <div class="map-overlay-inner">
                 <fieldset>
                     <button type="submit" onclick="getRoute()">GO!</button>
@@ -152,24 +155,6 @@
 				}
                 */
 			}
-
-            /*
-            function geocode_address() {
-                console.log('hello');
-                var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/8575%20E%20Chenango%20Ave%20Denver%20CO%2080237.json?access_token=pk.eyJ1Ijoic2FmYXJ0ZWFtMjAyMCIsImEiOiJja2dtbHRsbW4wMWtlMnhxbDNheGJ6OWY5In0.sQWD2q6skgQK31V-ip2Ltg&cachebuster=1603759393143&autocomplete=true'
-                console.log(url);
-                var req = new XMLHttpRequest();
-                req.open('GET', url, true);
-                req.onload = function() {
-                    var json = JSON.parse(req.response);
-                    console.log(json);
-                    var address = json.features[0];
-                    console.log(address.place_name);
-                    console.log(address.geometry.coordinates);
-                };
-                req.send();
-            }
-            */
 
             // create a function to make a directions request
             function getRoute() {
@@ -281,7 +266,7 @@
                     }
                 });
             });
-                
+            
             map.on('click', function(e) {
                 var coordsObj = e.lngLat;
                 canvas.style.cursor = '';
