@@ -22,7 +22,7 @@ from about import views as about_views
 from Users import views as user_views
 from Trips import views as trips_views
 
-urlpatterns = [
+urlpatterns = [	
 	path('accounts/', include('django.contrib.auth.urls')),                    # account urls
 	path('accounts/signup/', user_views.signup, name='signup'),
 
