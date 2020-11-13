@@ -122,6 +122,11 @@
                 console.log(result)
 				destination = result.place_name;
                 end = result.geometry.coordinates;
+                /*
+                if(start_location != "") {
+                    getRoute()
+                }
+                */
             });
             document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 
@@ -229,13 +234,19 @@
                     var tripInstructions = [];
                     for(var i = 0; i < steps.length; i++) {
                         tripInstructions.push('<br><li>' + steps[i].maneuver.instruction) + '</li>';
-                        var mins = Math.floor(data.duration / 60);
-                        var hours = Math.floor(mins / 60);
-                        var remaining_mins = Math.floor(mins % 60);
-                        instructions.innerHTML = '<br><span class="duration">Trip duration: ' + hours + ' hours, ' + remaining_mins + ' mins </span>' + tripInstructions;
+                        var result = compute_time(data.duration);
+                        instructions.innerHTML = '<br><span class="duration">Trip duration: ' + result[0] + ' hours, ' + result[1] + ' mins </span>' + tripInstructions;
                     }
                 };
                 req.send();
+            }
+
+            function compute_time(total_time) {
+                var mins = Math.floor(total_time / 60);
+                var hours = Math.floor(mins / 60);
+                var remaining_mins = Math.floor(mins % 60);
+
+                return [hours, remaining_mins];
             }
 
             /*
