@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% if user.is_authenticated %}
+    <p><a href="{% url 'logout' %}">Log Out</a></p>
+{% else %}
+    <p><a href="{% url 'login' %}">Login</a></p>
+{% endif %}
+
 	<ol>
 	  <a href="{% url 'signup' %}">Sign Up</a>
 	  <a href="{% url 'create_trip' %}">Create Trip</a>

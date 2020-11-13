@@ -14,8 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from django.conf.urls import url
+from django.urls import path, re_path
+from django.conf.urls import url, include
 from django.contrib.auth import views as auth_views
 
 from about import views as about_views
@@ -23,17 +23,22 @@ from Users import views as user_views
 from Trips import views as trips_views
 from maps import views as maps_views
 
-urlpatterns = [
-    path('signup/', user_views.signup, name='signup'),
-	path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-	path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    path('users/', user_views.display_user, name='display_users'),
-    path('about/', about_views.about, name='about'),
+urlpatterns = [	
+	path('accounts/', include('django.contrib.auth.urls')),                    # account urls
+	path('accounts/signup/', user_views.signup, name='signup'),
+
+    path('users/', user_views.display_user, name='display_users'),             
+
+    path('about/', about_views.about, name='about'),                           # about page url
+
     path('admin/', admin.site.urls),
-	path('', about_views.home, name='home'),
+
+	path('', about_views.home, name='home'),                                   # homepage urls
 	path('home/', about_views.home, name='home'),
-    path('trips/', trips_views.Trips, name='trips'),
+
+    path('trips/', trips_views.Trips, name='trips'),                           # trip urls
     path('trips_create/', trips_views.trips_created, name='trips_created'),
+	path('userAccount/', user_views.accountPage, name='user_account'),
     path('map/', maps_views.default_map, name='default_map'),
     path('directions/', maps_views.directions, name='directions'),
     path('createtrip/', trips_views.create_trip, name='create_trip'),
