@@ -1,5 +1,5 @@
 body {
-  background-image: url(../img/beanstalk.png);
+  background: url("img/sitebg.jpg") no-repeat center fixed;
 }
 
 .logo {
