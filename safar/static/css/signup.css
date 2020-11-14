@@ -3,14 +3,18 @@ body {
 }
 
 .logo {
-  font-family: 'Peralta', cursive;
+  font-size: 72px;
+  font-family: 'Cookie';
+  background: -webkit-linear-gradient(#FFAC33, #EE82EE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.logo a {
-  color: rgba(0,0,0,.9);
+a {
+  color: orange;
 }
 
-.logo a:hover,
-.logo a:active {
-  text-decoration: none;
+a:hover,
+a:active {
+  color: #CC5500;
 }
