@@ -21,6 +21,7 @@ from django.contrib.auth import views as auth_views
 from about import views as about_views
 from Users import views as user_views
 from Trips import views as trips_views
+from maps import views as maps_views
 
 urlpatterns = [	
 	path('accounts/', include('django.contrib.auth.urls')),                    # account urls
@@ -37,6 +38,8 @@ urlpatterns = [
 
     path('trips/', trips_views.Trips, name='trips'),                           # trip urls
     path('trips_create/', trips_views.trips_created, name='trips_created'),
-
 	path('userAccount/', user_views.accountPage, name='user_account'),
+    path('map/', maps_views.default_map, name='default_map'),
+    path('directions/', maps_views.directions, name='directions'),
+    path('createtrip/', trips_views.create_trip, name='create_trip'),
 ]
