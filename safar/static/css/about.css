@@ -125,41 +125,17 @@ main {
   transform: rotate(-180deg);
 }
 
-.column {
-  float: left;
-  width: 20%;
-  margin-bottom: 16px;
-  padding: 0 8px;
-}
-
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  margin: 8px;
-}
 
 .about-section {
   padding: 50px;
   text-align: center;
-  background-color: #474e5d;
-  color: white;
+  background: #474e5d;
 }
 
-.container {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-}
 
-.row {
-  padding: 0 16px;
-}
-
-.title {
-  color: grey;
-}
 
 /* Small screens */
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 768px) {
   .navbar {
     bottom: 0;
     width: 100vw;
@@ -180,16 +156,13 @@ main {
 
   .column {
     width: 100%;
-	display: block;
+	  display: block;
   }
 
-  main {
-    margin: 0;
-  }
 }
 
 /* Large screens */
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 700px) {
   .navbar {
     top: 0;
     width: 5rem;

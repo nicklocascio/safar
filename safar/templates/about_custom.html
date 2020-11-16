@@ -5,8 +5,60 @@
   <link rel="stylesheet" href="{% static 'css/about.css' %}"/>
   <link rel="stylesheet" href="{% static 'css/fa.css' %}"/>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"/>
+  <link href= "https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet">
+  <title>About</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    .column {
+      float: left;
+      width: 25%;
+      padding: 0 10px;
+    }
+
+    .row {margin: 0 -5px;}
+
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    @media screen and (max-width: 768px) {
+      .column {
+        width: 100%;
+        display: block;
+        margin-bottom: 20px;
+      }
+    }
+
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      padding: 16px;
+      text-align: center;
+      background-color: #f1f1f1;
+    }
+
+    .card-text {
+      color: white;
+    }
+
+    .card-link {
+      color: orange;
+    }
+
+    .card-title {
+      font-size: 40px;
+      font-family: 'Cookie';
+      background: -webkit-linear-gradient( #FFAC33, #EE82EE);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
 </head>
+
 
 <body>
   <nav class="navbar">
@@ -76,62 +128,62 @@
 
   <main>
     <div class="about-section">
-	  <h1 class="about">About Safar</h1>
-	  <p class="about">This is what we do</p>
-	  <p class="about">This is why we do it</p>
-	</div>
+	    <h1 style="font-size:72px;font-family:'Cookie';background:-webkit-linear-gradient(#FFAC33, #EE82EE);-webkit-background-clip:text;-webkit-text-fill-color: transparent;">About Safar</h1>
+	    <p>Safar is dedicated to taking the stress out of roadtripping. We love the journey, but hate worrying about how to get to the destination.</p>
+	    <p>Our team is made up of 4 students at the University of Notre Dame who have a passion for travel and software development. Safar is the result of a project for 
+        <a href="https://www3.nd.edu/~skumar5/teaching/2020-fall-sdp.html" style="color: orange;">CSE 40793</a>.
+      </p>
+	  </div>
     
 	<h2 style="text-align:center">Our Team</h2>
-	<div class="container">
 	  <div class="column">
-	    <div class="card">
-		  <img src="{% static 'img/beanstalk.png' %}" alt="Vincent" style="width:100%">
-		  <div class="row">
-		    <h2>Vincent Goyette</h2>
-			<p class="title">Developer</p>
-			<p>I go to Notre Dame!</p>
-			<a href="mailto:vgoyette@nd.edu">vgoyette@nd.edu</a>
+	    <div class="card" style="background-color: #474e5d;">
+		    <img src="{% static 'img/beanstalk.png' %}" alt="Vincent" style="width:100%">
+		    <div class="row">
+		      <h2 class="card-title">Vincent Goyette</h2>
+			    <p class="title">UI and Autentication Guru</p>
+			    <p class="card-text">I go to Notre Dame!</p>
+			    <a href="mailto:vgoyette@nd.edu" class="card-link">vgoyette@nd.edu</a>
 	      </div>
-		</div>
+		  </div>
 	  </div>
 	
 	  <div class="column">
-	    <div class="card">
-		  <img src="{% static 'img/beanstalk.png' %}" alt="Nick" style="width:100%">
-		  <div class="row">
-		    <h2>Nick Locascio</h2>
-			<p class="title">Developer</p>
-			<p>I go to Notre Dame!</p>
-			<a href="mailto:nlocasci@nd.edu">nlocasci@nd.edu</a>
+	    <div class="card" style="background-color: #474e5d;">
+		    <img src="{% static 'img/beanstalk.png' %}" alt="Nick" style="width:100%">
+		    <div class="row">
+		      <h2 class="card-title">Nick Locascio</h2>
+			    <p class="title">API Expert and Zoom Host</p>
+			    <p class="card-text">I go to Notre Dame!</p>
+			    <a href="mailto:nlocasci@nd.edu" class="card-link">nlocasci@nd.edu</a>
 	      </div>
-		</div>
+		  </div>
 	  </div>
 	  
 	  <div class="column">
-	    <div class="card">
-		  <img src="{% static 'img/beanstalk.png' %}" alt="Jack" style="width:100%">
-		  <div class="row">
-		    <h2>Jack Bigej</h2>
-			<p class="title">Developer</p>
-			<p>I go to Notre Dame!</p>
-			<a href="mailto:jbigej@nd.edu">jbigej@nd.edu</a>
+	    <div class="card" style="background-color: #474e5d;">
+		    <img src="{% static 'img/beanstalk.png' %}" alt="Jack" style="width:100%">
+		    <div class="row">
+		      <h2 class="card-title">Jack Bigej</h2>
+			    <p class="title">Database and View Master</p>
+			    <p class="card-text">I go to Notre Dame!</p>
+		    	<a href="mailto:jbigej@nd.edu" class="card-link">jbigej@nd.edu</a>
 	      </div>
-		</div>
+		  </div>
 	  </div>
 
 	  <div class="column">
-	    <div class="card">
-		  <img src="{% static 'img/beanstalk.png' %}" alt="Hind" style="width:100%">
-		  <div class="row">
-		    <h2>Hind Zahour</h2>
-			<p class="title">Developer</p>
-			<p>I go to Notre Dame!</p>
-			<a href="mailto:hzahour@nd.edu">hzahour@nd.edu</a>
+	    <div class="card" style="background-color: #474e5d;">
+		    <img src="{% static 'img/beanstalk.png' %}" alt="Hind" style="width:100%">
+		    <div class="row">
+		      <h2 class="card-title">Hind Zahour</h2>
+		    	<p class="title">Design and UI Virtuoso</p>
+			    <p class="card-text">I go to Notre Dame!</p>
+			    <a href="mailto:hzahour@nd.edu" class="card-link">hzahour@nd.edu</a>
 	      </div>
-		</div>
+		  </div>
 	  </div>
 
-    </div>
 
   </main>
 </body>
