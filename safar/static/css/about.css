@@ -29,7 +29,6 @@ body::-webkit-scrollbar-thumb {
 
 main {
   margin-left: 5rem;
-  padding: 1rem;
 }
 
 .navbar {
@@ -135,7 +134,7 @@ main {
 
 
 /* Small screens */
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 700px) {
   .navbar {
     bottom: 0;
     width: 100vw;
@@ -157,6 +156,10 @@ main {
   .column {
     width: 100%;
 	  display: block;
+  }
+
+  main {
+    margin-left: 0;
   }
 
 }

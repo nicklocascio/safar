@@ -16,6 +16,7 @@
       float: left;
       width: 25%;
       padding: 0 10px;
+	  margin-bottom: 10px;
     }
 
     .row {margin: 0 -5px;}
@@ -26,7 +27,7 @@
       clear: both;
     }
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 700px) {
       .column {
         width: 100%;
         display: block;
@@ -129,20 +130,21 @@
   <main>
     <div class="about-section">
 	    <h1 style="font-size:72px;font-family:'Cookie';background:-webkit-linear-gradient(#FFAC33, #EE82EE);-webkit-background-clip:text;-webkit-text-fill-color: transparent;">About Safar</h1>
-	    <p>Safar is dedicated to taking the stress out of roadtripping. We love the journey, but hate worrying about how to get to the destination.</p>
-	    <p>Our team is made up of 4 students at the University of Notre Dame who have a passion for travel and software development. Safar is the result of a project for 
-        <a href="https://www3.nd.edu/~skumar5/teaching/2020-fall-sdp.html" style="color: orange;">CSE 40793</a>.
+	    <p class="card-text">Safar is dedicated to taking the stress out of roadtripping. We love the journey, but hate worrying about how to get to the destination.</p>
+	    <p class="card-text">Our team is made up of 4 students at the University of Notre Dame who have a passion for travel and software development. Safar is the result of a project for 
+        <a href="https://www3.nd.edu/~skumar5/teaching/2020-fall-sdp.html" class="card-link">CSE 40793</a>.
       </p>
 	  </div>
     
 	<h2 style="text-align:center">Our Team</h2>
 	  <div class="column">
 	    <div class="card" style="background-color: #474e5d;">
-		    <img src="{% static 'img/beanstalk.png' %}" alt="Vincent" style="width:100%">
+		    <img src="{% static 'img/vincent.JPG' %}" alt="Vincent" style="width:100%; height:40%">
 		    <div class="row">
 		      <h2 class="card-title">Vincent Goyette</h2>
 			    <p class="title">UI and Autentication Guru</p>
-			    <p class="card-text">I go to Notre Dame!</p>
+			    <p class="card-text">Junior at Notre Dame</p>
+			    <p class="card-text">Late for stuff all the time</p>
 			    <a href="mailto:vgoyette@nd.edu" class="card-link">vgoyette@nd.edu</a>
 	      </div>
 		  </div>
@@ -150,11 +152,12 @@
 	
 	  <div class="column">
 	    <div class="card" style="background-color: #474e5d;">
-		    <img src="{% static 'img/beanstalk.png' %}" alt="Nick" style="width:100%">
+		    <img src="{% static 'img/nick.JPG' %}" alt="Nick" style="width:100%; height:40%;">
 		    <div class="row">
 		      <h2 class="card-title">Nick Locascio</h2>
 			    <p class="title">API Expert and Zoom Host</p>
-			    <p class="card-text">I go to Notre Dame!</p>
+			    <p class="card-text">Junior at Notre Dame</p>
+			    <p class="card-text">Backwards hat aficionado</p>
 			    <a href="mailto:nlocasci@nd.edu" class="card-link">nlocasci@nd.edu</a>
 	      </div>
 		  </div>
@@ -162,11 +165,12 @@
 	  
 	  <div class="column">
 	    <div class="card" style="background-color: #474e5d;">
-		    <img src="{% static 'img/beanstalk.png' %}" alt="Jack" style="width:100%">
+		    <img src="{% static 'img/jack.JPG' %}" alt="Jack" style="width:100%; height:40%">
 		    <div class="row">
 		      <h2 class="card-title">Jack Bigej</h2>
 			    <p class="title">Database and View Master</p>
-			    <p class="card-text">I go to Notre Dame!</p>
+			    <p class="card-text">Junior at Notre Dame</p>
+			    <p class="card-text">Play piano during meetings</p>
 		    	<a href="mailto:jbigej@nd.edu" class="card-link">jbigej@nd.edu</a>
 	      </div>
 		  </div>
@@ -174,11 +178,12 @@
 
 	  <div class="column">
 	    <div class="card" style="background-color: #474e5d;">
-		    <img src="{% static 'img/beanstalk.png' %}" alt="Hind" style="width:100%">
+		    <img src="{% static 'img/hind.JPG' %}" alt="Hind" style="width:100%; height:40%">
 		    <div class="row">
 		      <h2 class="card-title">Hind Zahour</h2>
 		    	<p class="title">Design and UI Virtuoso</p>
-			    <p class="card-text">I go to Notre Dame!</p>
+			    <p class="card-text">Senior at Notre Dame</p>
+			    <p class="card-text">Came up with the name Safar</p>
 			    <a href="mailto:hzahour@nd.edu" class="card-link">hzahour@nd.edu</a>
 	      </div>
 		  </div>
