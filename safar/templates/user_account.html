@@ -2,7 +2,11 @@
 
 {% load static %}
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {% if user.is_authenticated %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {% else %}
+    <meta http-equiv="refresh" content="0; url = {% url 'home' %}"/>
+  {% endif %}
   <script defer src="{% static 'js/about.js' %}"></script>
   <link rel="stylesheet" href="{% static 'css/about.css' %}"/>
   <link rel="stylesheet" href="{% static 'css/fa.css' %}"/>
@@ -68,7 +72,7 @@
          <a href="{% url 'user_account' %}" class="nav-link">
 		 <i class="fas fa-user fa-primary fa-secondary fa-2x"></i>
 		  {% if user.is_authenticated %}
-           <span class="link-text">Profile</span>
+           <span class="link-text">{{ user.username }}</span>
 		  {% else %}
 		   <span class="link-text">Log In</span>
 		  {% endif %}
@@ -76,3 +80,16 @@
       </li>
     </ul>
   </nav>
+
+  <main>
+  {% if user.is_authenticated %}
+    <div style="padding: 20px;">
+    <p>Hello there, {{ user.username }}</p>
+	</div>
+  {% else %}
+    <p>gtfo</p>
+  {% endif %}
+
+  </main>
+
+</body>

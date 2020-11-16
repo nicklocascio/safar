@@ -118,7 +118,7 @@
          <a href="{% url 'user_account' %}" class="nav-link">
 		 <i class="fas fa-user fa-primary fa-secondary fa-2x"></i>
 		  {% if user.is_authenticated %}
-           <span class="link-text">Profile</span>
+           <span class="link-text">{{ user.username }}</span>
 		  {% else %}
 		   <span class="link-text">Log In</span>
 		  {% endif %}
@@ -185,7 +185,7 @@
 			    <p class="card-text">Senior at Notre Dame</p>
 			    <p class="card-text">Came up with the name Safar</p>
 			    <a href="mailto:hzahour@nd.edu" class="card-link">hzahour@nd.edu</a>
-	      </div>
+	        </div>
 		  </div>
 	  </div>
 
