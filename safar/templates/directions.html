@@ -35,6 +35,13 @@
                 margin-top: 25px;
             }
 
+			.map-overlay .map-overlay-inner2 {
+                margin-left: 10px;
+                margin-right: 1100px;
+                margin-bottom: 10px;
+                margin-top: 25px;
+			}
+
             .map-overlay .button {
                 height: 50px;
                 right: 100px;
@@ -56,6 +63,21 @@
                 line-height: 2em;
             }
 
+            #itinerary {
+                position: absolute;
+                margin: 20px;
+                width: 25%;
+                top: 1%;
+                left: 0px;
+                bottom: 1%;
+                padding: 20px;
+                background-color: rgba(255, 255, 255, 0.9);
+                overflow-y: scroll;
+                font-family: sans-serif;
+                font-size: 0.8em;
+                line-height: 2em;
+            }
+
             .duration {
                 font-size: 2em;
             }
@@ -68,6 +90,67 @@
                 margin-left: -10%;
                 top: 20px;
             }
+
+			.sidenav {
+				height: 92%;
+  				width: 80%;
+  				position: absolute;
+  				top: 2%;
+  				background-color: rgba(255, 252, 187, .5);
+  				overflow-x: hidden;
+  				padding: 20px;
+			}
+
+			.itinerary a, .dropdown-btn {
+				padding: 6px 8px 6px 16px;
+				text-decoration: none;
+				font-size: 20px;
+				color: #818181;
+				display: block;
+				border: none;
+				background: none;
+				width: 100%;
+				text-align: left;
+				cursor: pointer;
+				outline: none;
+			}
+
+			.itinerary .button {
+                height: 50px;
+                right: 100px;
+                width: 20%;
+			}
+
+			.itinerary .dayForm{
+				top: 50%;
+				width: 80%;
+				position: absolute;
+				background-color: rgba(255, 255, 255, .5);
+		
+			}
+
+			.dropdown-container {
+				display: none;
+				padding-left: 8px;
+		
+			}
+
+			.fa-caret-down {
+  				float: right;
+  				padding-right: 8px;
+			}
+
+/* Some media queries for responsiveness */
+			@media screen and (max-height: 450px) {
+  				.sidenav {padding-top: 15px;}
+  				.sidenav a {font-size: 18px;}
+			}
+
+			.error_label {
+				color: rgba(255, 0, 0, 1);
+			}		
+
+
         </style>
     </head>
     <body>
@@ -80,17 +163,144 @@
         <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script> 
         <div id='map'></div>
-        <div class="map-overlay top">
-            <div class="map-overlay-inner">
-                <fieldset>
-                    <button type="submit" onclick="getRoute()">GO!</button>
-                </fieldset>
+        <div class="map-overlay">
+            <div class="map-overlay-inner top">
+				<fieldset>
+                    	<button type="submit" onclick="getRoute()">GO!</button>
+				</fieldset>
             </div>
         </div>
         <div id="instructions"></div>
+		<div id="itinerary">
+
+				<input type="number" id="numDays" min="1">
+				<button type="submit" onclick="setDays()">Set Days</button>
+				<button class="dropdown-btn">Days
+					<i class="fa fa-caret-down"></i>
+				</button>
+				<div class="dropdown-container">
+					<button type="submit" onclick="setDayVar(1)">Day 1</button>
+					<button type="submit" onclick="setDayVar(2)">Day 2</button>
+					<button type="submit" onclick="setDayVar(3)">Day 3</button>
+					<button type="submit" onclick="setDayVar(4)">Day 4</button>
+					<button type="submit" onclick="setDayVar(5)">Day 5</button>
+					<button type="submit" onclick="setDayVar(6)">Day 6</button>
+					<button type="submit" onclick="setDayVar(7)">Day 7</button>
+					<button type="submit" onclick="setDayVar(8)">Day 8</button>
+					<button type="submit" onclick="setDayVar(9)">Day 9</button>
+					<button type="submit" onclick="setDayVar(10)">Day 10</button>
+					<button type="submit" onclick="setDayVar(11)">Day 11</button>
+					<button type="submit" onclick="setDayVar(12)">Day 12</button>
+					<button type="submit" onclick="setDayVar(13)">Day 13</button>
+					<button type="submit" onclick="setDayVar(14)">Day 14</button>
+				</div>
+
+				<label>Day Selected: </label>
+				<label id="daySelected"></label>
+
+
+				<div class="dayForm">
+					<input type="text" id="action_desc" required>
+					<input type="time" id="action_time" min="00:00" max="23:59" required>
+					<button type="submit" onclick="setNewAction()">Add Action</button>
+				</div>
+				<div>
+					<label class="error_label" id="error_label"></label>
+				</div>
+				<div id="dayItinerary">
+					<label>Day Schedule: </label>
+				</div>
+				<button type="submit" onclick="save_trip()">Save Trip</button>
+
+		</div>
         <div id="geocoder" class="geocoder"></div>
 
         <script>
+			var trip_schedule = {};
+			var num_days = 1;
+			var curr_day = 1;
+/*
+			function allocateDays(){
+				for (i = 1; i <= days; i++){
+					day_tag = "Day " + i.toString();
+					var day_option = document.createElement(day_tag);
+					
+				}
+			}
+*/
+
+			for (i = 0; i < num_days; i++){
+				
+			}
+
+			function setNewAction(){
+				var action_time = document.getElementById("action_time").value;
+				var action_desc = document.getElementById("action_desc").value;
+				
+				console.log(document.getElementById("action_time").value);
+				console.log(document.getElementById("action_desc").value);
+				if (action_time === ""){
+					document.getElementById("error_label").innerText = "Error: Complete Time Field";
+
+				}else if (action_desc === ""){
+					document.getElementById("error_label").innerText = "Error: Complete Description Field";
+				}else{
+					document.getElementById("error_label").innerText = "";
+					if (curr_day in trip_schedule){
+						var new_action = {};
+						new_action["action_time"] = document.getElementById("action_time").value;
+						new_action["action_desc"] = document.getElementById("action_desc").innerText;
+
+						trip_schedule[curr_day].push(new_action);
+
+					}else{
+						var new_day = [];
+						var new_action = {};
+
+						new_action["action_time"] = action_time;
+						new_action["action_desc"] = action_desc;
+
+						new_day.push(new_action);
+
+						trip_schedule[curr_day] = new_day;
+					}
+
+					console.log(trip_schedule);
+					for (action in trip_schedule[curr_day]){
+						console.log(trip_schedule[curr_day][action]);
+					}
+				}
+
+
+			}
+
+			function setDayVar(n){
+				curr_day = n;
+				document.getElementById("daySelected").innerText = curr_day;
+				console.log(curr_day);
+			}
+
+			function setDays(){
+				num_days = document.getElementById("numDays").value;
+				console.log(num_days);
+			}
+
+			var dropdown = document.getElementsByClassName("dropdown-btn");
+			var i;
+
+			for (i = 0; i < dropdown.length; i++) {
+			  dropdown[i].addEventListener("click", function() {
+				  var dropdownContent = this.nextElementSibling;
+				  if (dropdownContent.style.display === "block") {
+				  	dropdownContent.style.display = "none";
+				  } else {
+				  	dropdownContent.style.display = "block";
+			  	}
+			  });
+			}
+
+
+
             mapboxgl.accessToken = 'pk.eyJ1Ijoic2FmYXJ0ZWFtMjAyMCIsImEiOiJja2dtbHRsbW4wMWtlMnhxbDNheGJ6OWY5In0.sQWD2q6skgQK31V-ip2Ltg';
             var map = new mapboxgl.Map({
                 container: 'map',
@@ -136,23 +346,26 @@
             //var bounds = [[-123.069003, 45.395273], [-122.303707, 45.612333]];
             //map.setMaxBounds(bounds);
 
-            var return_dict;
-			function create_trip(){
-				//display();
-				var url = "";
-				var req = new XMLHttpRequest();
-				req.open('POST', url, true);
-                var dict = {'start_location':start_location, 'destination':destination};
-				var json_dict = JSON.stringify(dict);
-				console.log(json_dict);
-				req.send(json_dict);
-                /*
-				req.onload = function(e){
-					//return_dict = JSON.parse(req.body);
-                    //console.log(return_dict)
-				    //window.location.href = "../directions/";
+			var return_dict;
+			function save_trip(){
+				if (start_location !== "" && destination !== ""){
+					var url = "";
+					var req = new XMLHttpRequest();
+					req.open('POST', url, true);
+					trip_schedule['start_location'] = start_location;
+					trip_schedule['destination'] = destination;
+					trip_schedule['num_days'] = num_days; 
+					var json_dict = JSON.stringify(trip_schedule);
+					console.log(json_dict);
+					req.send(json_dict);
+					req.onload = function(){
+						return_dict = JSON.parse("{escapejs}");
+						console.log(return_dict);
+					}
+				}else{
+					document.getElementById("error_label").innerText = "Error: Need Start and End";
 				}
-                */
+                
 			}
 
             // create a function to make a directions request
