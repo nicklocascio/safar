@@ -10,12 +10,38 @@
   <script defer src="{% static 'js/about.js' %}"></script>
   <link rel="stylesheet" href="{% static 'css/about.css' %}"/>
   <link rel="stylesheet" href="{% static 'css/fa.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/card.css' %}"/>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"/>
+  <link rel="shortcut icon" type="image/png" href="{% static 'img/compassico.png' %}"/>
   <title>Your Account</title>
 </head>
 
 <body>
+  <main>
+    <div class="userhead">
+      <p class="userhead-title">Hello, {{ user.username }}</p>
+	    <p class="userhead-content">Welcome to your profile page! Take a look at your past trips, or <a href="{% url 'logout'%}">click here to logout.</a></p>
+    </div>
+
+  
+    <section class="usercard-list">
+      {% for key, value in UserTrips.items %}
+        <article class="usercard">
+          <header class="usercard-header">
+            <h2><a href="#">{{ key }}</a></h2>
+          </header>
+		      {% for key2, value2 in value.items %}
+		        <p class="usercard-content">{{ key2 }}: {{ value2 }}</p>
+          {% endfor %}
+        </article>
+		  {% endfor %}
+	    </div>
+
+    </section>
+
+  </main>
+
   <nav class="navbar">
     <ul class="navbar-nav">
       <li class="logo">
@@ -81,15 +107,6 @@
     </ul>
   </nav>
 
-  <main>
-  {% if user.is_authenticated %}
-    <div style="padding: 20px;">
-    <p>Hello there, {{ user.username }}</p>
-	</div>
-  {% else %}
-    <p>gtfo</p>
-  {% endif %}
-
-  </main>
+  
 
 </body>
