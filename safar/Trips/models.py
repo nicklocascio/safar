@@ -12,6 +12,12 @@ class Trip(models.Model):
 	days = models.IntegerField(default=0)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+	def __str__(self):
+		trips = [Trip.objects.filter(user=self.user)]
+		for i in range(len(trips)):
+			if trips[i] == self:
+				return i
+
 class Day(models.Model):
 	start_location = models.CharField(max_length=30, default="here")
 	destination = models.CharField(max_length=30, default="there")
@@ -24,6 +30,10 @@ class DayAction(models.Model):
 	day = models.ForeignKey(Day, on_delete=models.CASCADE)
 
 class trip_lib():
+
+
+	def user_trips(user_n):
+		return [Trips.objects.filter(user=user_n)]
 
 
 	def add_action(day_n):
