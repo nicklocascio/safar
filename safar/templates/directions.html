@@ -18,78 +18,32 @@
                 bottom: 0;
                 width: 100%;
             }
-
-            .map-overlay {
-                font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-                position: absolute;
-                width: 5%;
-                top: 0;
-                left: 1105px;
-                padding: 15px;
-            }
-
-            .map-overlay .map-overlay-inner {
-                padding: 10px;
-                margin-bottom: 10px;
-            }
-
-            .map-overlay-inner button {
-                height: 50px;
-                right: 100px;
-                width: 100%;
-                cursor: pointer;
-            }
-
-            #instructions {
-                position: absolute;
-                margin: 20px;
-                width: 25%;
-                top: 0;
-                right: 100px;
-                bottom: 20%;
-                padding: 20px;
-                background-color: rgba(255, 255, 255, 0.9);
-                overflow-y: scroll;
-                font-family: sans-serif;
-                font-size: 0.8em;
-                line-height: 2em;
-            }
-
-            .duration {
-                font-size: 2em;
-            }
-
-            .geocoder {
-                position: absolute;
-                z-index: 1;
-                width: 50%;
-                left: 50%;
-                margin-left: -10%;
-                top: 20px;
-            }
         </style>
     </head>
     <body>
-        <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+        <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.js"></script>
         <link
             rel="stylesheet"
-            href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+            href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.0/mapbox-gl-directions.css"
             type="text/css"
         />
         <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script> 
         <div id='map'></div>
-        <div class="map-overlay top">
-            <div class="map-overlay-inner">
-                <fieldset>
-                    <button type="submit" onclick="getRoute()">GO!</button>
-                </fieldset>
-            </div>
-        </div>
-        <div id="instructions"></div>
-        <div id="geocoder" class="geocoder"></div>
+        <div id="directions" class="directions"></div>
 
         <script>
+            // this makes an api call for points of interest successfully
+            url = 'https://api.tomtom.com/search/2/poiSearch/bar.json?lat=45.523&lon=-122.663&radius=1600&categorySet=9379&key=ofA7qZAPku6DpZdRy3h56n5hZZ0g99t9'
+            var result;
+            fetch(url)
+                .then(response => {
+                    result = response.json();
+                    console.log(result);
+                    return result;
+                });
+
+            // setting up the map and directions features
             mapboxgl.accessToken = 'pk.eyJ1Ijoic2FmYXJ0ZWFtMjAyMCIsImEiOiJja2dtbHRsbW4wMWtlMnhxbDNheGJ6OWY5In0.sQWD2q6skgQK31V-ip2Ltg';
             var map = new mapboxgl.Map({
                 container: 'map',
@@ -97,45 +51,78 @@
                 center: [-122.662323, 45.523751],
                 zoom: 9
             });
-            
+
+            var directions = new MapboxDirections ({
+                accessToken: mapboxgl.accessToken,
+                mapboxgl: mapboxgl,
+                interactive: false
+            });
+
+            map.addControl(directions, "top-right");
+
+            var start_location = "";
+            var destination = "";
+            var origin_coords = 0;
+            var dest_coords = 0;
+            var count = 0;
+
+            directions.on("route", function(e) {
+                console.log(e);
+
+                // reverse geocode origin
+                var origin = directions.getOrigin();
+                origin_coords = origin.geometry.coordinates;
+                var origin_url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + origin_coords[0] + ',' + origin_coords[1] + '.json?access_token=pk.eyJ1Ijoic2FmYXJ0ZWFtMjAyMCIsImEiOiJja2dtbHRsbW4wMWtlMnhxbDNheGJ6OWY5In0.sQWD2q6skgQK31V-ip2Ltg';
+
+                function originReqListener() {
+                    var json = JSON.parse(this.response);
+                    var substring = "place"
+                    for(let i = 0; i < json.features.length; i++) {
+                        if(json.features[i].id.includes(substring)) {
+                            start_location = json.features[3].place_name;
+                            break;
+                        }
+                    }
+                }
+
+                var req = new XMLHttpRequest();
+                req.addEventListener("load", originReqListener);
+                req.open('GET', origin_url);
+                req.send();
+
+                // reverse geocode destination
+                var dest = directions.getDestination();
+                var dest_coords = dest.geometry.coordinates;
+                var dest_url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + dest_coords[0] + ',' + dest_coords[1] + '.json?access_token=pk.eyJ1Ijoic2FmYXJ0ZWFtMjAyMCIsImEiOiJja2dtbHRsbW4wMWtlMnhxbDNheGJ6OWY5In0.sQWD2q6skgQK31V-ip2Ltg';
+
+                function destReqListener() {
+                    var djson = JSON.parse(this.response);
+                    var substring = "place"
+                    for(let i = 0; i < djson.features.length; i++) {
+                        if(djson.features[i].id.includes(substring)) {
+                            destination = djson.features[i].place_name;
+                            break;
+                        }
+                    }
+                    console.log(start_location);
+                    console.log(destination);
+                    create_trip(start_location, destination);
+                }
+
+                var dreq = new XMLHttpRequest();
+                dreq.addEventListener("load", destReqListener);
+                dreq.open('GET', dest_url);
+                dreq.send();
+            });
+
+
             // initialize the map canvas to interact with later
             var canvas = map.getCanvasContainer();
-            
-            var start;
-            var end;
-	        var start_location = "";
-	        var destination = "";
 
-            var geocoder = new MapboxGeocoder ({
-                accessToken: mapboxgl.accessToken,
-                mapboxgl: mapboxgl
-            }).on('result', function({result}) {
-                console.log(result)
-                start_location = result.place_name;
-                start = result.geometry.coordinates;
-            });
-            document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
-
-            var geocoder = new MapboxGeocoder ({
-                accessToken: mapboxgl.accessToken,
-                mapboxgl: mapboxgl
-            }).on('result', function({result}) {
-                console.log(result)
-				destination = result.place_name;
-                end = result.geometry.coordinates;
-                if(start_location != "") {
-                    console.log("getting route");
-                    getRoute();
-                }
-            });
-            document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
-
-            // set bounds of map
-            //var bounds = [[-123.069003, 45.395273], [-122.303707, 45.612333]];
-            //map.setMaxBounds(bounds);
-
+            // add user's trip to the database
             var return_dict;
-			function create_trip(){
+			function create_trip(start_location, destination){
+                console.log(start_location + " --> " + destination);
 				//display();
 				var url = "";
 				var req = new XMLHttpRequest();
@@ -153,168 +140,114 @@
                 */
 			}
 
-            // create a function to make a directions request
-            function getRoute() {
-                create_trip();
-                console.log(start_location + " --> " + destination);
-                console.log(start + " --> " + end)
-                // an arbitrary start will always be the same
-                // only the end or destination will change
-                //var start = [-122.662323, 45.523751];
-                var url = 'https://api.mapbox.com/directions/v5/mapbox/driving/' + start[0] + ',' + start[1] + ';'
-                    + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
+            console.log(origin_coords + " --> " + dest_coords);
+            // have user drag a marker to get suggestions
+            var marker = new mapboxgl.Marker({
+                draggable: true
+            })
+                .setLngLat([-122.662323, 45.523751])
+                .addTo(map);
 
-                // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
-                var req = new XMLHttpRequest();
-                req.open('GET', url, true);
-                req.onload = function() {
-                    var json = JSON.parse(req.response);
-                    var data = json.routes[0];
-                    var route = data.geometry.coordinates;
-                    var geojson = {
-                        type: 'Feature',
-                        properties: {},
-                        geometry: {
-                            type: 'LineString',
-                            coordinates: route
-                        }
-                    };
-                    // if route already exists on the map, reset it using setData
-                    if(map.getSource('route')) {
-                        console.log("in if");
-                        map.getSource('route').setData(geojson);
-                    } else { // otherwise make a new request
-                        console.log("making new request");
-                        map.addLayer({
-                            id: 'route',
-                            type: 'line',
-                            source: {
-                                type: 'geojson',
-                                data: {
-                                    type: 'Feature',
-                                    properties: {},
-                                    geometry: {
-                                        type: 'LineString',
-                                        coordinates: geojson
-                                    }
-                                }
-                            },
-                            layout: {
-                                'line-join': 'round',
-                                'line-cap': 'round'
-                            },
-                            paint: {
-                                'line-color': '#3887be',
-                                'line-width': 5,
-                                'line-opacity': 0.75
-                            }
-                        });
-                    }
-                    // display instructions
-                    var instructions = document.getElementById('instructions');
-                    var steps = data.legs[0].steps;
-
-                    console.log("about to display instructions");
-                    var tripInstructions = [];
-                    for(var i = 0; i < steps.length; i++) {
-                        tripInstructions.push('<br><li>' + steps[i].maneuver.instruction) + '</li>';
-                        var result = compute_time(data.duration);
-                        instructions.innerHTML = '<br><span class="duration">Trip duration: ' + result[0] + ' hours, ' + result[1] + ' mins </span>' + tripInstructions;
-                    }
-                };
-                req.send();
+            function onDragEnd() {
+                var lngLat = marker.getLngLat();
+                console.log("lng: " + lngLat.lng + " lat: " + lngLat.lat);
+                getSuggestions(lngLat.lng, lngLat.lat);
             }
 
-            function compute_time(total_time) {
-                var mins = Math.floor(total_time / 60);
-                var hours = Math.floor(mins / 60);
-                var remaining_mins = Math.floor(mins % 60);
+            marker.on('dragend', onDragEnd);
 
-                return [hours, remaining_mins];
+            // get suggestions
+            function getSuggestions(lng, lat) {
+                url = 'https://api.tomtom.com/search/2/poiSearch/bar.json?lat=' + lat + '&lon=' + lng + '&radius=1600&categorySet=9379&key=ofA7qZAPku6DpZdRy3h56n5hZZ0g99t9'
+                var result;
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        result = data.results;
+                        console.log(result);
+                        addSuggestions(result);
+                    })
+                    .catch(error => console.log(error));
             }
 
-            /*
-            map.on('load', function() {
-                // make an initial directions request that 
-                // starts and ends @ same location
-                //geocode_address();
-                //getRoute(start);
+            function addSuggestions(result) {
+                // create the suggestions layer
+                console.log(count);
 
-                // Add starting point to the map
-                map.addLayer({
-                    id: 'point',
-                    type: 'circle',
-                    source: {
-                        type: 'geojson',
-                        data: {
-                            type: 'FeatureCollection',
-                            features: [{
-                                type: 'Feature',
-                                properties: {},
-                                geometry: {
-                                    type: 'Point',
-                                    coordinates: start
-                                }
-                            }
-                            ]
-                        }
-                    },
-                    paint: {
-                        'circle-radius': 10,
-                        'circle-color': '#3887be'
+                if(count > 0) {
+                    console.log("in count if");
+                    map.removeLayer('suggestions');
+                    map.removeSource('suggestions');
+                }
+
+                var suggestions = {
+                    'type': 'geojson',
+                    'data': {
+                        'type': 'FeatureCollection',
+                        'features': []
                     }
-                });
-            });
-            */
-            
-            /*
-            map.on('click', function(e) {
-                var coordsObj = e.lngLat;
-                canvas.style.cursor = '';
-                var coords = Object.keys(coordsObj).map(function(key) {
-                    return coordsObj[key];
-                });
-                var end = {
-                    type: 'FeatureCollection',
-                    features: [{
-                        type: 'Feature',
-                        properties: {},
-                        geometry: {
-                            type: 'Point',
-                            coordinates: coords
-                        }
-                    }
-                    ]
-                };
-                if(map.getLayer('end')) {
-                    map.getSource('end').setData(end);
-                } else {
-                    map.addLayer({
-                        id: 'marker',
-                        type: 'circle',
-                        source: {
-                            type: 'geojson',
-                            data: {
-                                type: 'FeatureCollection',
-                                features: [{
-                                    type: 'Feature',
-                                    properties: {},
-                                    geometry: {
-                                        type: 'Point',
-                                        coordinates: coords
-                                    }
-                                }]
-                            }
+                }
+                
+                console.log(suggestions);
+
+                for(let i = 0; i < result.length; i++) {
+                    console.log(result[i].poi.name);
+
+                    var newSuggestion = {
+                        'type': 'Feature',
+                        'properties': {
+                            'description': '<strong>' + result[i].poi.name + '</strong>',
+                            'icon': 'bar'
                         },
-                        paint: {
-                            'circle-radius': 10,
-                            'circle-color': '#f30'
+                        'geometry': {
+                            'type': 'Point',
+                            'coordinates': [result[i].position.lon, result[i].position.lat]
                         }
-                    });
-                //}
-                //getRoute(coords);
+                    }
+
+                    console.log(newSuggestion);
+
+                    suggestions.data.features[i] = newSuggestion;
+                }
+
+                console.log(suggestions);
+                map.addSource('suggestions', suggestions);
+
+                // add the suggestions layer
+                map.addLayer({
+                    'id': 'suggestions',
+                    'type': 'symbol',
+                    'source': 'suggestions',
+                    'layout': {
+                        'icon-image': '{icon}-15',
+                        'icon-allow-overlap': true
+                    }
+                });
+
+                count++;
+            }
+
+            map.on('click', 'suggestions', function(e) {
+                var coordinates = e.features[0].geometry.coordinates.slice();
+                var description = e.features[0].properties.description;
+
+                while(Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+
+                new mapboxgl.Popup()
+                    .setLngLat(coordinates)
+                    .setHTML(description)
+                    .addTo(map);
             });
-            */
+
+            map.on('mouseenter', 'suggestions', function() {
+                map.getCanvas().style.cursor = 'pointer';
+            });
+
+            map.on('mouseleave', 'suggestions', function() {
+                map.getCanvas().style.cursor = '';
+            });
         </script>
     </body>
 </html>
