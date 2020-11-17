@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/compassico.png' %}"/>
 </head>
 
 
@@ -97,20 +98,26 @@
                 <a href="{% url 'home' %}" class="nav-link">Home</a>  
              </li>  
              <li>
-                <a href="#about" class="nav-link">About</a>  
-             </li>  
+                <a href="{% url 'create_trip' %}" class="nav-link">Trip</a>  
+             </li>
              <li>
-                <a href="#values" class="nav-link">Values</a>  
+                <a href="{% url 'about' %}" class="nav-link">About</a>  
              </li>  
-             <li>
-                <a href="#destination" class="nav-link">Destination</a>  
-             </li>  
-             <li>
-                <a href="#Exploring" class="nav-link">Trip Example</a>  
-             </li>  
-             <li>
-                <a href="#contact" class="nav-link">Contact</a>  
-             </li>  
+             {% if user.is_authenticated %}
+			   <li>
+			     <a href="{% url 'user_account' %}"  class="nav-link">Account</a>
+			   </li>
+               <li>
+                 <a href="{% url 'logout' %}" class="nav-link">Logout</a>  
+               </li>
+			 {% else %}
+			   <li>
+			     <a href="{% url 'login' %}" class="nav-link">Login</a>
+			   </li>
+               <li>
+                 <a href="{% url 'signup' %}" class="nav-link">Signup</a>  
+               </li>
+			 {% endif %}
 
           </ul>    
        </nav> 
@@ -134,10 +141,7 @@
                 <h6>Safar</h6>
              </div>
              <p>
-               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
-               quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum 
-               dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborumi
-               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco la               boris nisi ut aliquip ex ea commodo consequat.            
+               Safar is a road trip companion service that makes your road trips better. Through our technology, you get to plan your trip around the United States over any number of days you'd like. You'll also get suggestions for places to stay, eat, see, and so much more. Get ready to make your road trips seamless.            
              </p>
              <div class="social-media">
                  <ul class= "nav-list">  
@@ -171,10 +175,9 @@
                  <div class= "icon-container">
                     <i class="fas fa-lightbulb"></i>      
                  </div>
-                 <h1>A</h1>             
+                 <h1>Easy</h1>             
                  <p>
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                     Instead of getting lost between different websites trying to make your road trip great, Safar does all of the work for you. Just sit back, pack your bags, and leave the rest to us. 
                  </p> 
              </div>
 
@@ -183,24 +186,21 @@
                  <div class= "icon-container">
                     <i class="fas fa-lightbulb"></i>      
                  </div>
-                 <h1>B</h1>
+                 <h1>Multi-Function</h1>
                  <p>
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                 </p>              
+                    Our technology helps you navigate between cities and states while also making your road trip experience that much more insightful and enriching. Prior to the trip, Safar helps you get all the stops you need so you don’t have to worry about getting lost, tired or confused.  
+				 </p>              
              </div>
 
              <div class= "prop" data-aos="fade-in" data-aos-delay="900">
                  <div class= "icon-container">
                     <i class="fas fa-lightbulb"></i>      
                  </div>
-                 <h1>C</h1>
+                 <h1>Efficient</h1>
                  <p>
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                     If you don't want to plan a trip and would just like to explore, there are multiple custom trips you can choose from that people have tried and recommended before.
                  </p>   
              </div>
-
 
           </div>
        </div>
@@ -221,8 +221,7 @@
                  <h6>USA</h6>
                  <h1>Indiana</h1>
                  <p>
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                     Indiana is known for its wide-ranging plains, the Indianapolis 500, and, of course, that Midwestern hospitality.
                  </p> 
 				 <a href = "#" class="cta">View Details</a>
 			 
@@ -235,8 +234,7 @@
                  <h6>USA</h6>
                  <h1>California</h1>
                  <p>
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                     Stretching from the Mexican border to the Northern Pacific, there might not be a better road-trip state than California. With cliff-lined beaches, redwood forests, mountain ranges, and deserts, you'll never get bored out here.
                  </p>
                  <a href = "#" class="cta">View Details</a>
  
@@ -255,8 +253,7 @@
                  <h6>USA</h6>
                  <h1>Colorado</h1>
                  <p>
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                     Colorado has a diverse landscape of arid desert, river canyons and snow-covered Rocky Mountains, which are partly protected by Rocky Mountain National Park. Elsewhere, Mesa Verde National Park features Ancestral Puebloan cliff dwellings. Perched a mile above sea level, Denver, Colorado’s capital and largest city, features a vibrant downtown area.
                  </p>   
                  <a href = "#" class="cta">View Details</a>
               </div>
@@ -277,24 +274,23 @@
                  <li class="date" data-date="1">
                      <h1>Day 1</h1>
                  <p>
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                     Denver to Moab, to see Arches National Park in the afternoon and evening.
+                     Moab to Grand Canyon National Park with a stop in Monument Valley.
                  </p>  
                  </li>
 
                  <li class="date" data-date="2">
                      <h1>Day 2</h1>
                  <p>
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                     Morning at Grand Canyon National Park, and to Las Vegas for the evening. See the Hoover Dam on the way!
+                     Las Vegas to Mammoth Lakes through the sweltering Death Valley.
                  </p>  
                  </li>
 
                  <li class="date" data-date="3">
                      <h1>Day 3</h1>
                  <p>
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                     Through Yosemite National Park on the 120 via Tioga Road. Finish in the great city of San Francisco.
                  </p>  
                  </li>
 

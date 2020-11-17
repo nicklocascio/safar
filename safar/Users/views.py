@@ -23,4 +23,16 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 def accountPage(request):
-    return render(request, 'user_account.html')
+    context = {'UserTrips': {'Trip 1': {'Start Location': 'Detroit', 'Destination': 'South Bend', 'Drive Time': '3 Hours', 'Days': '1 Day'}, 
+                             'Trip 2': {'Start Location': 'Miami', 'Destination': 'Chicago', 'Drive Time': '16 Hours', 'Days': '3 Days'}, 
+                             'Trip 3': {'Start Location': 'Los Angeles', 'Destination': 'Portland', 'Drive Time': '14 Hours', 'Days': '3 Days'},
+                             'Trip 4': {'Start Location': 'New York City', 'Destination': 'Nashville', 'Drive Time': '9 Hours', 'Days': '2 Days'},
+                             'Trip 5': {'Start Location': 'Austin', 'Destination': 'Phoenix', 'Drive Time': '20 Hours', 'Days': '4 Days'},
+                             'Trip 6': {'Start Location': 'Austin', 'Destination': 'Phoenix', 'Drive Time': '20 Hours', 'Days': '4 Days'},
+                             'Trip 7': {'Start Location': 'Austin', 'Destination': 'Phoenix', 'Drive Time': '20 Hours', 'Days': '4 Days'},
+                             'Trip 8': {'Start Location': 'Austin', 'Destination': 'Phoenix', 'Drive Time': '20 Hours', 'Days': '4 Days'},
+                             'Trip 9': {'Start Location': 'Austin', 'Destination': 'Phoenix', 'Drive Time': '20 Hours', 'Days': '4 Days'},
+                             'Trip 10': {'Start Location': 'Austin', 'Destination': 'Phoenix', 'Drive Time': '20 Hours', 'Days': '4 Days'},
+                            }
+              }
+    return render(request, 'user_account.html', context)
