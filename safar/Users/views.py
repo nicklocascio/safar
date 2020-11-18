@@ -5,6 +5,7 @@ from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
 from .forms import SignUpForm
 from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def display_user(request):
@@ -22,6 +23,7 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
+@login_required
 def accountPage(request):
     context = {'UserTrips': {'Trip 1': {'Start Location': 'Detroit', 'Destination': 'South Bend', 'Drive Time': '3 Hours', 'Days': '1 Day'}, 
                              'Trip 2': {'Start Location': 'Miami', 'Destination': 'Chicago', 'Drive Time': '16 Hours', 'Days': '3 Days'}, 

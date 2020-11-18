@@ -37,7 +37,8 @@
 }
 
 .usercard-list::-webkit-scrollbar {
-  height: 0.5rem;
+  height: 0.25rem;
+  width: 0.25rem;
 }
 
 .usercard-list::-webkit-scrollbar-track {
