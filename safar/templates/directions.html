@@ -121,54 +121,55 @@
         <div id='map'></div>
         <div id="directions" class="directions"></div>
 		<div id="itinerary">
+            <input id="trip_ready" type="checkbox" name="trip_ready" value="trip_ready">
+            <label for="trip_ready">Final Route</label><br>
+            <input type="number" id="numDays" min="1">
+            <button type="submit" onclick="setDays()">Set Days</button>
+            <button class="dropdown-btn">Days
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-container">
+                <button type="submit" onclick="setDayVar(1)">Day 1</button>
+                <button type="submit" onclick="setDayVar(2)">Day 2</button>
+                <button type="submit" onclick="setDayVar(3)">Day 3</button>
+                <button type="submit" onclick="setDayVar(4)">Day 4</button>
+                <button type="submit" onclick="setDayVar(5)">Day 5</button>
+                <button type="submit" onclick="setDayVar(6)">Day 6</button>
+                <button type="submit" onclick="setDayVar(7)">Day 7</button>
+                <button type="submit" onclick="setDayVar(8)">Day 8</button>
+                <button type="submit" onclick="setDayVar(9)">Day 9</button>
+                <button type="submit" onclick="setDayVar(10)">Day 10</button>
+                <button type="submit" onclick="setDayVar(11)">Day 11</button>
+                <button type="submit" onclick="setDayVar(12)">Day 12</button>
+                <button type="submit" onclick="setDayVar(13)">Day 13</button>
+                <button type="submit" onclick="setDayVar(14)">Day 14</button>
+            </div>
 
-				<input type="number" id="numDays" min="1">
-				<button type="submit" onclick="setDays()">Set Days</button>
-				<button class="dropdown-btn">Days
-					<i class="fa fa-caret-down"></i>
-				</button>
-				<div class="dropdown-container">
-					<button type="submit" onclick="setDayVar(1)">Day 1</button>
-					<button type="submit" onclick="setDayVar(2)">Day 2</button>
-					<button type="submit" onclick="setDayVar(3)">Day 3</button>
-					<button type="submit" onclick="setDayVar(4)">Day 4</button>
-					<button type="submit" onclick="setDayVar(5)">Day 5</button>
-					<button type="submit" onclick="setDayVar(6)">Day 6</button>
-					<button type="submit" onclick="setDayVar(7)">Day 7</button>
-					<button type="submit" onclick="setDayVar(8)">Day 8</button>
-					<button type="submit" onclick="setDayVar(9)">Day 9</button>
-					<button type="submit" onclick="setDayVar(10)">Day 10</button>
-					<button type="submit" onclick="setDayVar(11)">Day 11</button>
-					<button type="submit" onclick="setDayVar(12)">Day 12</button>
-					<button type="submit" onclick="setDayVar(13)">Day 13</button>
-					<button type="submit" onclick="setDayVar(14)">Day 14</button>
-				</div>
+            <label>Day Selected: </label>
+            <label id="daySelected"></label>
 
-				<label>Day Selected: </label>
-				<label id="daySelected"></label>
+            <div class="dayForm">
+                <input type="text" id="action_desc" required>
+                <input type="time" id="action_time" min="00:00" max="23:59" required>
+                <button type="submit" onclick="setNewAction()">Add Action</button>
+            </div>
+            <div>
+                <label class="error_label" id="error_label"></label>
+            </div>
+            <div id="dayItinerary">
+                <label>Day Schedule: </label>
+            </div>
+            <button type="submit" onclick="save_trip()">Save Trip</button>
 
-				<div class="dayForm">
-					<input type="text" id="action_desc" required>
-					<input type="time" id="action_time" min="00:00" max="23:59" required>
-					<button type="submit" onclick="setNewAction()">Add Action</button>
-				</div>
-				<div>
-					<label class="error_label" id="error_label"></label>
-				</div>
-				<div id="dayItinerary">
-					<label>Day Schedule: </label>
-                </div>
-                <button type="submit" onclick="save_trip()">Save Trip</button>
-
-                <div class="suggestionInput">
-                    <h3>Suggestion Type:</h3>
-                    <input id="hotels" type="radio" name="suggestion" value="hotels" checked>
-                    <label for="hotels">Hotels</label>
-                    <input id="restaurants" type="radio" name="suggestion" value="restaurants">
-                    <label for="restaurants">Restaurants</label>
-                    <input id="nightlife" type="radio" name="suggestion" value="nightlife">
-                    <label for="nightlife">Nightlife</label>
-                </div>
+            <div class="suggestionInput">
+                <h3>Suggestion Type:</h3>
+                <input id="hotels" type="radio" name="suggestion" value="hotels" checked>
+                <label for="hotels">Hotels</label>
+                <input id="restaurants" type="radio" name="suggestion" value="restaurants">
+                <label for="restaurants">Restaurants</label>
+                <input id="nightlife" type="radio" name="suggestion" value="nightlife">
+                <label for="nightlife">Nightlife</label>
+            </div>
 
 		</div>
 
@@ -337,7 +338,10 @@
                     }
                     console.log(start_location);
                     console.log(destination);
-                    create_trip(start_location, destination);
+                    document.getElementById("trip_ready").addEventListener("change", function() {
+                        console.log("checked");
+                        create_trip(start_location, destination);
+                    }) 
                 }
 
                 var dreq = new XMLHttpRequest();
