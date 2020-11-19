@@ -26,14 +26,15 @@
 
   
     <section class="usercard-list">
-      {% for key, value in UserTrips.items %}
+      {% for trip in trips %}
         <article class="usercard">
           <header class="usercard-header">
-            <h2><a href="#">{{ key }}</a></h2>
+            <h2><a href="#">Trip {{ forloop.counter }}</a></h2>
           </header>
-		      {% for key2, value2 in value.items %}
-		        <p class="usercard-content">{{ key2 }}: {{ value2 }}</p>
-          {% endfor %}
+		        <p class="usercard-content">Start: {{ trip.start_location }}</p>
+		        <p class="usercard-content">Destination: {{ trip.destination }}</p>
+		        <p class="usercard-content">Days: {{ trip.days }}</p>
+		        <p class="usercard-content">UUID: {{ trip.uuid }}</p>
         </article>
 		  {% endfor %}
 	    </div>

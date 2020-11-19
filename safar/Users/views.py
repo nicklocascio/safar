@@ -5,6 +5,7 @@ from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
 from .forms import SignUpForm
 from django.core.mail import send_mail
+from Trips.models import *
 
 # Create your views here.
 def display_user(request):
@@ -23,16 +24,19 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 def accountPage(request):
-    context = {'UserTrips': {'Trip 1': {'Start Location': 'Detroit', 'Destination': 'South Bend', 'Drive Time': '3 Hours', 'Days': '1 Day'}, 
-                             'Trip 2': {'Start Location': 'Miami', 'Destination': 'Chicago', 'Drive Time': '16 Hours', 'Days': '3 Days'}, 
-                             'Trip 3': {'Start Location': 'Los Angeles', 'Destination': 'Portland', 'Drive Time': '14 Hours', 'Days': '3 Days'},
-                             'Trip 4': {'Start Location': 'New York City', 'Destination': 'Nashville', 'Drive Time': '9 Hours', 'Days': '2 Days'},
-                             'Trip 5': {'Start Location': 'Austin', 'Destination': 'Phoenix', 'Drive Time': '20 Hours', 'Days': '4 Days'},
-                             'Trip 6': {'Start Location': 'Austin', 'Destination': 'Phoenix', 'Drive Time': '20 Hours', 'Days': '4 Days'},
-                             'Trip 7': {'Start Location': 'Austin', 'Destination': 'Phoenix', 'Drive Time': '20 Hours', 'Days': '4 Days'},
-                             'Trip 8': {'Start Location': 'Austin', 'Destination': 'Phoenix', 'Drive Time': '20 Hours', 'Days': '4 Days'},
-                             'Trip 9': {'Start Location': 'Austin', 'Destination': 'Phoenix', 'Drive Time': '20 Hours', 'Days': '4 Days'},
-                             'Trip 10': {'Start Location': 'Austin', 'Destination': 'Phoenix', 'Drive Time': '20 Hours', 'Days': '4 Days'},
-                            }
-              }
-    return render(request, 'user_account.html', context)
+    user = request.user
+
+    trips = list(Trip.objects.filter(user=user))
+    print(trips)
+
+# trip.start_location
+# trip.destination
+# trip.total_time
+# trip.days
+# trip.uuid
+
+    #for trip in trips:
+    #    tripDict = {}
+    #    tripDict['start'] = trip.start_location
+
+    return render(request, 'user_account.html', {'trips': trips})
