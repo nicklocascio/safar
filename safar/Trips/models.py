@@ -9,7 +9,7 @@ import uuid
 class Trip(models.Model):
 	start_location = models.CharField(max_length=30, default="here")
 	destination = models.CharField(max_length=30, default="there")
-	total_time = models.IntegerField(default=0)
+	total_time = models.CharField(max_length=30, default="")
 	days = models.IntegerField(default=0)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	uuid = models.UUIDField(default=uuid.uuid4, editable=False)
@@ -67,7 +67,7 @@ class trip_lib():
 			if destination != "":
 				trip.destination = destination
 			if total_time != 0:
-				trip.total_day_time = total_day_time
+				trip.total_time = total_time
 			if days != 0:
 				trip.days = days
 			if user != None:
