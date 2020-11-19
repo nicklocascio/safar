@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
 
 # Create your models here.
 
@@ -11,12 +12,11 @@ class Trip(models.Model):
 	total_time = models.IntegerField(default=0)
 	days = models.IntegerField(default=0)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+
 
 	def __str__(self):
-		trips = [Trip.objects.filter(user=self.user)]
-		for i in range(len(trips)):
-			if trips[i] == self:
-				return i
+		return str(self.uuid)
 
 class Day(models.Model):
 	start_location = models.CharField(max_length=30, default="here")
@@ -33,7 +33,8 @@ class trip_lib():
 
 
 	def user_trips(user_n):
-		return [Trips.objects.filter(user=user_n)]
+		return list(Trip.objects.filter(user=user_n))
+		
 
 
 	def add_action(day_n):
