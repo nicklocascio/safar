@@ -121,8 +121,7 @@
         <div id='map'></div>
         <div id="directions" class="directions"></div>
 		<div id="itinerary">
-            <input id="trip_ready" type="checkbox" name="trip_ready" value="trip_ready">
-            <label for="trip_ready">Final Route</label><br>
+
             <input type="number" id="numDays" min="1">
             <button type="submit" onclick="setDays()">Set Days</button>
             <button class="dropdown-btn">Days
@@ -174,6 +173,8 @@
 		</div>
 
         <script>
+			//var trip_schedule = JSON.parse(document.getElementById('my_data').textContent);
+			//console.log(trip_schedule);
 			var trip_schedule = {};
 			var num_days = 1;
 			var curr_day = 1;
@@ -188,6 +189,10 @@
 */
 
 			for (i = 0; i < num_days; i++){
+				
+			}
+
+			function setNewDay(){
 				
 			}
 
@@ -206,8 +211,8 @@
 					document.getElementById("error_label").innerText = "";
 					if (curr_day in trip_schedule){
 						var new_action = {};
-						new_action["action_time"] = document.getElementById("action_time").value;
-						new_action["action_desc"] = document.getElementById("action_desc").innerText;
+						new_action["action_time"] = action_time;
+						new_action["action_desc"] = action_desc;
 
 						trip_schedule[curr_day].push(new_action);
 
@@ -228,14 +233,57 @@
 						console.log(trip_schedule[curr_day][action]);
 					}
 				}
+				reprint_schedule();
 
 
+			}
+
+			function reprint_schedule(){
+
+				document.getElementById("day_itin").innerText = "\n";
+
+				if (curr_day in trip_schedule){
+					var day_itin = trip_schedule[curr_day];
+
+					day_itin.sort(function fuction(a, b){
+						var t1 = a['action_time'];
+						var t2 = b['action_time'];
+						
+						var t1_split = t1.split(":");
+						var t2_split = t2.split(":");
+						
+						if (parseInt(t1_split[0]) === parseInt(t2_split[0])){
+							return parseInt(t1_split[1]) - parseInt(t2_split[1]);
+						}else{ 
+							return parseInt(t1_split[0]) - parseInt(t2_split[0]);
+						}
+					});
+
+					for (var i = 0; i < day_itin.length; i++){
+						document.getElementById('day_itin').innerText += convertTime(day_itin[i]['action_time']) + ": " + day_itin[i]['action_desc']+"\n";
+					}
+				}
 			}
 
 			function setDayVar(n){
 				curr_day = n;
 				document.getElementById("daySelected").innerText = curr_day;
+				reprint_schedule();	
 				console.log(curr_day);
+			}
+
+			function convertTime(t){
+				var split = t.split(":");
+				if (parseInt(split[0]) > 12){
+					var h = parseInt(split[0]) - 12;
+					return h + ":" + split[1] + " PM";
+				}else if (parseInt(split[0]) == 0){
+					return "12:00 AM";
+				}else if (parseInt(split[0]) == 12){
+					return "12:00 PM";
+				}else{
+					return parseInt(split[0]) + ":" + split[1] + " AM";
+				}
 			}
 
 			function setDays(){
@@ -351,30 +399,59 @@
             });
 
 
+            var return_dict;
             // initialize the map canvas to interact with later
             var canvas = map.getCanvasContainer();
-
+			// save user's trip to the database
+			function save_trip(){
+				if (trip_schedule['start_location'] !== "" && trip_schedule['destination'] !== ""){
+						console.log(start_location + " --> " + destination);
+						//display();
+						var url = "";
+						var req = new XMLHttpRequest();
+						req.open('POST', url, true);
+						trip_schedule['num_days'] = num_days; 
+						var json_dict = JSON.stringify(trip_schedule);
+						console.log(json_dict);
+						req.send(json_dict);
+				} else{
+						document.getElementById("error_label").innerText = "Error: Need Start and End";
+				}
+     		}
             // add user's trip to the database
-            var return_dict;
 			function create_trip(start_location, destination){
-                if (start_location !== "" && destination !== ""){
-                    console.log(start_location + " --> " + destination);
-                    //display();
-                    var url = "";
-                    var req = new XMLHttpRequest();
-                    req.open('POST', url, true);
-                    trip_schedule['start_location'] = start_location;
-					trip_schedule['destination'] = destination;
-					trip_schedule['num_days'] = num_days; 
-                    var json_dict = JSON.stringify(dict);
-                    console.log(json_dict);
-                    req.send(json_dict);
-                } else{
-					document.getElementById("error_label").innerText = "Error: Need Start and End";
-                }
-            }
+				if (start_location !== "" && destination !== ""){
+						console.log(start_location + " --> " + destination);
+						//display();
+						var url = "";
+						var req = new XMLHttpRequest();
+						req.open('POST', url, true);
+				  		trip_schedule['start_location'] = start_location;
+						trip_schedule['destination'] = destination;
+						trip_schedule['num_days'] = num_days; 
+						var json_dict = JSON.stringify(trip_schedule);
+						console.log(json_dict);
+						req.send(json_dict);
+				} else{
+							document.getElementById("error_label").innerText = "Error: Need Start and End";
+				}
+     		}
 
             console.log(origin_coords + " --> " + dest_coords);
+            // have user drag a marker to get suggestions
+            var marker = new mapboxgl.Marker({
+                draggable: true
+            })
+                .setLngLat([-122.662323, 45.523751])
+                .addTo(map);
+
+            function onDragEnd() {
+                var lngLat = marker.getLngLat();
+                console.log("lng: " + lngLat.lng + " lat: " + lngLat.lat);
+                getSuggestions(lngLat.lng, lngLat.lat);
+
+            }
+
 
             // get suggestions
             function getSuggestions(lng, lat) {
