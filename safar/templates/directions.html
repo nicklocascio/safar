@@ -348,6 +348,15 @@
 
             directions.on("route", function(e) {
                 console.log(e);
+                
+                // convert time from response
+                var raw = e.route[0].duration;
+                var total_mins = Math.floor(raw/60);
+                var hours = Math.floor(total_mins/60);
+                var mins = total_mins%60;
+
+                var time = hours + "h " + mins + "m";
+                console.log(time); 
 
                 // reverse geocode origin
                 var origin = directions.getOrigin();
@@ -389,6 +398,7 @@
                     console.log(destination);
                     trip_schedule['start_location'] = start_location;
 					trip_schedule['destination'] = destination;
+                    trip_schedule['total_time'] = time;
                 }
 
                 var dreq = new XMLHttpRequest();
@@ -493,10 +503,8 @@
                     }
                 }
                 
-                console.log(suggestions);
 
                 for(let i = 0; i < result.length; i++) {
-                    console.log(result[i].poi.name);
                     var poi = result[i].poi;
                     var address = result[i].address;
 
@@ -518,8 +526,6 @@
                             'coordinates': [result[i].position.lon, result[i].position.lat]
                         }
                     }
-
-                    console.log(newSuggestion);
 
                     suggestions.data.features[i] = newSuggestion;
                 }
