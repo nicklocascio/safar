@@ -96,7 +96,7 @@
   				padding-right: 8px;
 			}
 
-/* Some media queries for responsiveness */
+            /* Some media queries for responsiveness */
 			@media screen and (max-height: 450px) {
   				.sidenav {padding-top: 15px;}
   				.sidenav a {font-size: 18px;}
@@ -120,60 +120,57 @@
         <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script> 
         <div id='map'></div>
         <div id="directions" class="directions"></div>
-       
 		<div id="itinerary">
 
-				<input type="number" id="numDays" min="1">
-				<button type="submit" onclick="setDays()">Set Days</button>
-				<button class="dropdown-btn">Days
-					<i class="fa fa-caret-down"></i>
-				</button>
-				<div class="dropdown-container">
-					<button type="submit" onclick="setDayVar(1)">Day 1</button>
-					<button type="submit" onclick="setDayVar(2)">Day 2</button>
-					<button type="submit" onclick="setDayVar(3)">Day 3</button>
-					<button type="submit" onclick="setDayVar(4)">Day 4</button>
-					<button type="submit" onclick="setDayVar(5)">Day 5</button>
-					<button type="submit" onclick="setDayVar(6)">Day 6</button>
-					<button type="submit" onclick="setDayVar(7)">Day 7</button>
-					<button type="submit" onclick="setDayVar(8)">Day 8</button>
-					<button type="submit" onclick="setDayVar(9)">Day 9</button>
-					<button type="submit" onclick="setDayVar(10)">Day 10</button>
-					<button type="submit" onclick="setDayVar(11)">Day 11</button>
-					<button type="submit" onclick="setDayVar(12)">Day 12</button>
-					<button type="submit" onclick="setDayVar(13)">Day 13</button>
-					<button type="submit" onclick="setDayVar(14)">Day 14</button>
-				</div>
+            <input type="number" id="numDays" min="1">
+            <button type="submit" onclick="setDays()">Set Days</button>
+            <button class="dropdown-btn">Days
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-container">
+                <button type="submit" onclick="setDayVar(1)">Day 1</button>
+                <button type="submit" onclick="setDayVar(2)">Day 2</button>
+                <button type="submit" onclick="setDayVar(3)">Day 3</button>
+                <button type="submit" onclick="setDayVar(4)">Day 4</button>
+                <button type="submit" onclick="setDayVar(5)">Day 5</button>
+                <button type="submit" onclick="setDayVar(6)">Day 6</button>
+                <button type="submit" onclick="setDayVar(7)">Day 7</button>
+                <button type="submit" onclick="setDayVar(8)">Day 8</button>
+                <button type="submit" onclick="setDayVar(9)">Day 9</button>
+                <button type="submit" onclick="setDayVar(10)">Day 10</button>
+                <button type="submit" onclick="setDayVar(11)">Day 11</button>
+                <button type="submit" onclick="setDayVar(12)">Day 12</button>
+                <button type="submit" onclick="setDayVar(13)">Day 13</button>
+                <button type="submit" onclick="setDayVar(14)">Day 14</button>
+            </div>
 
-				<label>Day Selected: </label>
-				<label id="daySelected"></label>
+            <label>Day Selected: </label>
+            <label id="daySelected"></label>
 
+            <div class="dayForm">
+                <input type="text" id="action_desc" required>
+                <input type="time" id="action_time" min="00:00" max="23:59" required>
+                <button type="submit" onclick="setNewAction()">Add Action</button>
+            </div>
+            <div>
+                <label class="error_label" id="error_label"></label>
+            </div>
+            <div id="dayItinerary">
+                <label>Day Schedule: </label>
+            </div>
+            <button type="submit" onclick="save_trip()">Save Trip</button>
 
-				<div class="dayForm">
-					<input type="text" id="action_desc" required>
-					<input type="time" id="action_time" min="00:00" max="23:59" required>
-					<button type="submit" onclick="setNewAction()">Add Action</button>
-				</div>
-				<div>
-					<label class="error_label" id="error_label"></label>
-				</div>
-				<div id="dayItinerary">
-					<label>Day Schedule: </label>
-					<label id="day_itin"></label>
-				</div>
-				<button type="submit" onclick="save_trip()">Save Trip</button>
+            <div class="suggestionInput">
+                <h3>Suggestion Type:</h3>
+                <input id="hotels" type="radio" name="suggestion" value="hotels" checked>
+                <label for="hotels">Hotels</label>
+                <input id="restaurants" type="radio" name="suggestion" value="restaurants">
+                <label for="restaurants">Restaurants</label>
+                <input id="nightlife" type="radio" name="suggestion" value="nightlife">
+                <label for="nightlife">Nightlife</label>
+            </div>
 
 		</div>
-        <div id="geocoder" class="geocoder"></div>
-		<h6 id="django_data"></h6>
-
-
-		<script>
-			/*var data = JSON.parse("{{context|escapejs}}"); 
-    		var dataNode = document.getElementById('django_data');
-			dataNode.innerHTML+="{{my_data|escapejs}}";*/
-
-		</script>
 
         <script>
 			//var trip_schedule = JSON.parse(document.getElementById('my_data').textContent);
@@ -326,6 +323,22 @@
 
             map.addControl(directions, "top-right");
 
+            // have user drag a marker to get suggestions
+            var marker = new mapboxgl.Marker({
+                draggable: true
+            })
+                .setLngLat([-122.662323, 45.523751])
+                .addTo(map);
+
+            function onDragEnd() {
+                var lngLat = marker.getLngLat();
+                console.log("lng: " + lngLat.lng + " lat: " + lngLat.lat);
+                map.flyTo({center: marker.getLngLat(), zoom: 13})
+                getSuggestions(lngLat.lng, lngLat.lat);
+            }
+
+            marker.on('dragend', onDragEnd);
+
             var start_location = "";
             var destination = "";
             var origin_coords = 0;
@@ -338,6 +351,7 @@
                 // reverse geocode origin
                 var origin = directions.getOrigin();
                 origin_coords = origin.geometry.coordinates;
+                marker.setLngLat([origin_coords[0], origin_coords[1]]);
                 var origin_url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + origin_coords[0] + ',' + origin_coords[1] + '.json?access_token=pk.eyJ1Ijoic2FmYXJ0ZWFtMjAyMCIsImEiOiJja2dtbHRsbW4wMWtlMnhxbDNheGJ6OWY5In0.sQWD2q6skgQK31V-ip2Ltg';
 
                 function originReqListener() {
@@ -372,7 +386,10 @@
                     }
                     console.log(start_location);
                     console.log(destination);
-                    create_trip(start_location, destination);
+                    document.getElementById("trip_ready").addEventListener("change", function() {
+                        console.log("checked");
+                        create_trip(start_location, destination);
+                    }) 
                 }
 
                 var dreq = new XMLHttpRequest();
@@ -432,25 +449,49 @@
                 var lngLat = marker.getLngLat();
                 console.log("lng: " + lngLat.lng + " lat: " + lngLat.lat);
                 getSuggestions(lngLat.lng, lngLat.lat);
+
             }
 
-            marker.on('dragend', onDragEnd);
 
             // get suggestions
             function getSuggestions(lng, lat) {
-                url = 'https://api.tomtom.com/search/2/poiSearch/bar.json?lat=' + lat + '&lon=' + lng + '&radius=1600&categorySet=9379&key=ofA7qZAPku6DpZdRy3h56n5hZZ0g99t9'
+                // build url based on suggestion input
+                var query = "";
+                var categorySet = "";
+                var icon = "";
+                
+                if(document.getElementById('hotels').checked) {
+                    console.log("hotels clicked");
+                    query = "hotel";
+                    categorySet = "7314";
+                    icon = "lodging";
+                } else if(document.getElementById('restaurants').checked) {
+                    console.log("restaurants clicked");
+                    query = "restaurant";
+                    categorySet = "7315";
+                    icon = "restaurant";
+                } else if (document.getElementById('nightlife').checked) {
+                    console.log("nightlife clicked");
+                    query = "bar";
+                    categorySet = "9379";
+                    icon = "bar";
+                }
+
+                url = 'https://api.tomtom.com/search/2/poiSearch/' + query + '.json?limit=20&lat=' + lat + '&lon=' + lng + '&radius=8046&categorySet=' + categorySet + '&key=ofA7qZAPku6DpZdRy3h56n5hZZ0g99t9'
+                console.log(url);
+                
                 var result;
                 fetch(url)
                     .then(response => response.json())
                     .then(data => {
                         result = data.results;
                         console.log(result);
-                        addSuggestions(result);
+                        addSuggestions(result, icon);
                     })
                     .catch(error => console.log(error));
             }
 
-            function addSuggestions(result) {
+            function addSuggestions(result, icon) {
                 // create the suggestions layer
                 console.log(count);
 
@@ -472,12 +513,21 @@
 
                 for(let i = 0; i < result.length; i++) {
                     console.log(result[i].poi.name);
+                    var poi = result[i].poi;
+                    var address = result[i].address;
 
                     var newSuggestion = {
                         'type': 'Feature',
                         'properties': {
-                            'description': '<strong>' + result[i].poi.name + '</strong>',
-                            'icon': 'bar'
+                            'description': 
+                                '<strong>' + poi.name + '</strong>' +
+                                '<p><a href="http://' + poi.url + '"' + 
+                                'target="_blank" title="Opens in a new window">' +
+                                poi.name + '</a> is located at:<br>' +
+                                address.streetNumber + ' ' + address.streetName + '<br>' +
+                                address.localName + ', ' + address.countrySubdivision + ' ' + address.postalCode + 
+                                '<br>Phone: ' + poi.phone,
+                            'icon': icon
                         },
                         'geometry': {
                             'type': 'Point',
