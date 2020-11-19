@@ -39,11 +39,11 @@ def create_trip(request):
 			if target_trip == None: #no trip, create one
 				print('Creating new trip...')
 				target_trip = trip_lib.add_trip(user, int(data['num_days']))
-				trip_lib.edit_trip(trip=target_trip, start_location=data['start_location'], destination=data['destination'])
+				trip_lib.edit_trip(trip=target_trip, start_location=data['start_location'], destination=data['destination'], total_time=data['total_time'])
 
 			else: #trip exists, edit it
 				print('Editing trip...')
-				trip_lib.edit_trip(trip=target_trip, start_location=data['start_location'], destination=data['destination'], days=data['num_days'])
+				trip_lib.edit_trip(trip=target_trip, start_location=data['start_location'], destination=data['destination'], days=data['num_days'], total_time=data['total_time'])
 
 			#update trip day_actions atm
 			back_days = list(Day.objects.filter(trip=target_trip))
@@ -73,6 +73,7 @@ def create_trip(request):
 				'uuid':str(target_trip),
 				'start_location':target_trip.start_location,
 				'destination':target_trip.destination,
+				'total_time': target_trip.total_time,
 			}
 
 			for i in range(1, int(target_trip.days)+1):
